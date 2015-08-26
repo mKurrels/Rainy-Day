@@ -1,0 +1,22 @@
+{
+  "name": "family_fund",
+  "version": "1.0.0",
+  "description": "an app to save and lend money amongst family",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mKurrels/2015-06-thesis.git"
+  },
+  "author": "Micheal Kurrels",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mKurrels/2015-06-thesis/issues"
+  },
+  "homepage": "https://github.com/mKurrels/2015-06-thesis#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}

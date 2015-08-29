@@ -1,6 +1,10 @@
 node_modules/
 bower_components/
 *.log
+*.sqlite
+*.DS_Store
+
+**/blogNotes/**
 
 build/
 dist/

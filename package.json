@@ -17,6 +17,12 @@
   },
   "homepage": "https://github.com/mKurrels/2015-06-thesis#readme",
   "dependencies": {
-    "express": "^4.13.3"
+    "bluebird": "1.0.8",
+    "body-parser": "^1.13.3",
+    "bookshelf": "~0.6.4",
+    "express": "^4.13.3",
+    "knex": "^0.5.0",
+    "mysql": "^2.9.0",
+    "sqlite3": "^3.0.10"
   }
 }

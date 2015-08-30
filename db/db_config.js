@@ -22,5 +22,5 @@ db.knex.schema.hasTable('users').then(function(exists) {
   }
 });
 
-
+//hi
 exports.db = db;

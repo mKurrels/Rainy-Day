@@ -1,11 +1,13 @@
 var knex = require('knex')({
   client: 'sqlite3',
   connection: {
-    filename: "./ff.sqlite"
+    filename: __dirname + "/ff.sqlite"
   }
 });
 
-knex.schema.hasTable('users').then(function(exists) {
+db = require('bookshelf')(knex);
+
+db.knex.schema.hasTable('users').then(function(exists) {
   if (!exists) {
     console.log('nope, doesnt exist');
     return knex.schema.createTable('users', function(t) {
@@ -15,7 +17,10 @@ knex.schema.hasTable('users').then(function(exists) {
       t.boolean('isManager');
       t.integer('fund_id');
     });
+  } else {
+    console.log('yep, exists!!!');
   }
 });
 
-exports.bookshelf = require('bookshelf')(knex);
+
+exports.db = db;

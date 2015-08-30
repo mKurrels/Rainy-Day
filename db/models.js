@@ -1,11 +1,12 @@
-var bookshelf = require('./db_config.js').bookshelf;
+var db = require('./db_config.js').db;
 
  // console.log("-------------------", bookshelf);
 
-exports.User = User = bookshelf.Model.extend({
+var User = db.Model.extend({
   tableName: 'users'
 });
 
+exports.User = User;
 // console.log(User, 'user', new User());
 
 // User.forge({'venmoID': 'vasdjf;ljklue'}).save()

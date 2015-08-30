@@ -1,9 +1,8 @@
 var User = require('../db/models').User;
+console.log('user', User);
 
 exports.postUser = function (req, res) {
   newUser = req.body; 
-  console.log("newUser", newUser);
-  // {venmoID: '', value: 1111, isManager: true, fundID: ''}
   User.forge(newUser).save()
     .then(function (user) {
       console.log(user);
@@ -11,12 +10,14 @@ exports.postUser = function (req, res) {
     });
 };
 
-exports.getUser = function (req, res) {
+exports.getAllUsers = function (req, res) {
   new User()
-    .fetch()
-    .then(function(model) {
-      // outputs 'Slaughterhouse Five'
-      console.log(model.get('venmoID'), '3420958723049587');
-      console.log(model.get('fund_id'), '3420958723049587');
+  .fetchAll()
+    .then(function(user) {
+      res.send(user.models);
+    })
+    .catch(function(error) {
+      console.log(error);
+      res.send('An error occured');
     });
 };

@@ -3,12 +3,17 @@ var app = express();
 var reqHandlers = require('./request_handlers');
 var bodyParser = require('body-parser');
 console.log(reqHandlers, 'reqHndlers');
+console.log("_______________", __dirname);
 
-app.use(express.static('../public'));
+app.use(express.static(__dirname + '/../client'));
 app.use(bodyParser.json());
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+// app.get('/', function (req, res) {
+//   res.send('Hello World!');
+// });
+
+app.post('/payment', function (req, res) {
+  console.log('payment maid dude!', req.body);
 });
 
 app.post('/user', reqHandlers.postUser);

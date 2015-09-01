@@ -1,5 +1,6 @@
 var User = require('../db/models').User;
 var Pot = require('../db/models').Pot;
+var Payment = require('../db/models').Payment;
 
 var postX = function (req, res, model) {
   x = req.body;
@@ -39,6 +40,26 @@ exports.getAllPots = function (req, res) {
 exports.postPot = function (req, res) {
   console.log('post pots', req.body);
   postX(req, res, Pot);
+};
+
+exports.getAllPayments = function (req, res) {
+  console.log('get payments');
+  getAllX(req, res, Payment);
+};
+
+exports.postPayment = function (req, res) {
+  var user_id = JSON.parse(req.body.user_id);
+  var value = JSON.parse(req.body.value);
+
+  var newPayment = new Payment ({'value': value, 'user_id': user_id});
+  newPayment.save()
+    .then(function(payment) {
+      console.log("we did it!!!!!!!", {payment: payment});
+      res.json({id: payment.id});
+    })
+    .catch(function(err){
+      res.status(500).send(err);
+    });
 };
 
 //********* TODO:

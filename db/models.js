@@ -5,24 +5,24 @@ var db = require('./db_config.js').db;
 var User = db.Model.extend({
   tableName: 'users',
   hasTimestamps: true,
-  pot: function() {
-    return this.belongsTo(Pot);
-  },
-  payments: function() {
-    return this.hasMany(Payment);
+  // pot: function() {
+  //   return this.belongsTo(Pot);
+  // },
+  transactions: function() {
+    return this.hasMany(Transaction);
   }
 });
 
-var Pot = db.Model.extend({
-  tableName: 'pots',
-  hasTimestamps: true,
-  users: function() {
-    return this.hasMany(User);
-  }
-});
+// var Pot = db.Model.extend({
+//   tableName: 'pots',
+//   hasTimestamps: true,
+//   users: function() {
+//     return this.hasMany(User);
+//   }
+// });
 
-var Payment = db.Model.extend({
-  tableName: 'payments',
+var Transaction = db.Model.extend({
+  tableName: 'transactions',
   hasTimestamps: true,
   user: function() {
     return this.belongsTo(User);
@@ -30,8 +30,8 @@ var Payment = db.Model.extend({
 });
 
 exports.User = User;
-exports.Pot = Pot;
-exports.Payment = Payment;
+// exports.Pot = Pot;
+exports.Transaction = Transaction;
 // console.log(User, 'user', new User());
 
 // User.forge({'venmoID': 'vasdjf;ljklue'}).save()

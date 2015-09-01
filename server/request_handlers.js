@@ -1,6 +1,6 @@
 var User = require('../db/models').User;
-var Pot = require('../db/models').Pot;
-var Payment = require('../db/models').Payment;
+// var Pot = require('../db/models').Pot;
+var Transaction = require('../db/models').Transaction;
 
 var postX = function (req, res, model) {
   x = req.body;
@@ -29,38 +29,50 @@ exports.getAllUsers = function (req, res) {
 };
 
 exports.postUser = function (req, res) {
-  postX(req, res, User);
-};
-
-exports.getAllPots = function (req, res) {
-  console.log('get pots');
-  getAllX(req, res, Pot);
-};
-
-exports.postPot = function (req, res) {
-  console.log('post pots', req.body);
-  postX(req, res, Pot);
-};
-
-exports.getAllPayments = function (req, res) {
-  console.log('get payments');
-  getAllX(req, res, Payment);
-};
-
-exports.postPayment = function (req, res) {
-  var user_id = JSON.parse(req.body.user_id);
-  var value = JSON.parse(req.body.value);
-  console.log(user_id, value);
-  var newPayment = new Payment ({'value': value, 'user_id': user_id});
-  newPayment.save()
-    .then(function(payment) {
-      console.log("we did it!!!!!!!", {payment: payment});
-      res.json({id: payment.id});
+  console.log('user', req.body);
+  user = req.body;
+  var newUser = new User (user);
+  newUser.save()
+    .then(function(user) {
+      console.log("we did it!!!!!!!", {user: user});
+      res.json({id: user.id});
     })
     .catch(function(err){
       res.status(500).send(err);
     });
 };
+
+// exports.getAllPots = function (req, res) {
+//   console.log('get pots');
+//   getAllX(req, res, Pot);
+// };
+
+// exports.postPot = function (req, res) {
+//   console.log('post pots', req.body);
+//   postX(req, res, Pot);
+// };
+
+exports.getAllTransactions = function (req, res) {
+  console.log('get Transactions');
+  getAllX(req, res, Transaction);
+};
+
+exports.postTransaction = function (req, res) {
+  var user_id = JSON.parse(req.body.user_id);
+  var value = JSON.parse(req.body.value);
+
+  var newTransaction = new Transaction ({'value': value, 'user_id': user_id});
+  newTransaction.save()
+    .then(function(transaction) {
+      console.log("we did it!!!!!!!", {transaction: transaction});
+      res.json({id: transaction.id});
+    })
+    .catch(function(err){
+      res.status(500).send(err);
+    });
+
+};
+
 
 //********* TODO:
 // exports.getPotByUserId = function (req, res) {

@@ -4,8 +4,8 @@ angular.module('ff.services', [])
   var pay = function (amount) {
     return $http({
       method: 'POST',
-      url: '/payment',
-      data: {amount: amount}
+      url: '/transactions',
+      data: {user_id: 1, amount: amount}
     })
     .then(function (resp) {
       console.log(resp.data);

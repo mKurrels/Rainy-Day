@@ -15,13 +15,13 @@ router.route('/users')
   .get(reqHandlers.getAllUsers)
   .post(reqHandlers.postUser);
 
-router.route('/pots')
-  .post(reqHandlers.postPot)
-  .get(reqHandlers.getAllPots);
+// router.route('/pots')
+//   .post(reqHandlers.postPot)
+//   .get(reqHandlers.getAllPots);
 
-router.route('/payments')
-  .post(reqHandlers.postPayment)
-  .get(reqHandlers.getAllPayments);
+router.route('/transactions')
+  .post(reqHandlers.postTransaction)
+  .get(reqHandlers.getAllTransactions);
 
 router.get('/auth', function (req, res) {
   res.redirect('https://sandbox-api.venmo.com/v1/oauth/authorize?client_id=2887&scope=access_profile');

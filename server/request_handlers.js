@@ -50,7 +50,7 @@ exports.getAllPayments = function (req, res) {
 exports.postPayment = function (req, res) {
   var user_id = JSON.parse(req.body.user_id);
   var value = JSON.parse(req.body.value);
-
+  console.log(user_id, value);
   var newPayment = new Payment ({'value': value, 'user_id': user_id});
   newPayment.save()
     .then(function(payment) {

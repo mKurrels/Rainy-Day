@@ -1,23 +1,53 @@
 var User = require('../db/models').User;
-console.log('user', User);
+var Pot = require('../db/models').Pot;
 
-exports.postUser = function (req, res) {
-  newUser = req.body; 
-  User.forge(newUser).save()
-    .then(function (user) {
-      console.log(user);
-      res.send(user.get('venmoID'));
+var postX = function (req, res, model) {
+  x = req.body;
+  console.log('x', x);
+  model.forge(x).save()
+    .then(function (x) {
+      res.json({id: x.get('venmoID'), x: x});
+    })
+    .catch(function (err) {
+      res.status(500).json({error: true, data: {message: err.message}});
+    }); 
+};
+
+var getAllX = function (req, res, Model) {
+  new Model().fetchAll()
+    .then(function(x) {
+      res.send({data: x.models});
+    })
+    .catch(function (err) {
+      res.status(500).json({error: true, data: {message: err.message}});
     });
 };
 
 exports.getAllUsers = function (req, res) {
-  new User()
-  .fetchAll()
-    .then(function(user) {
-      res.send(user.models);
-    })
-    .catch(function(error) {
-      console.log(error);
-      res.send('An error occured');
-    });
+  getAllX(req, res, User);
 };
+
+exports.postUser = function (req, res) {
+  postX(req, res, User);
+};
+
+exports.getAllPots = function (req, res) {
+  console.log('get pots');
+  getAllX(req, res, Pot);
+};
+
+exports.postPot = function (req, res) {
+  console.log('post pots', req.body);
+  postX(req, res, Pot);
+};
+
+//********* TODO:
+// exports.getPotByUserId = function (req, res) {
+//   console.log(req.params);
+// };
+
+// exports.getAllUsersByPot = function (req, res) {
+
+// };
+
+

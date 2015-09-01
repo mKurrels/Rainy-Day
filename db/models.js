@@ -3,10 +3,21 @@ var db = require('./db_config.js').db;
  // console.log("-------------------", bookshelf);
 
 var User = db.Model.extend({
-  tableName: 'users'
+  tableName: 'users',
+  pots: function() {
+    return this.belongsTo(Pot);
+  }
+});
+
+var Pot = db.Model.extend({
+  tableName: 'pots',
+  users: function() {
+    return this.hasMany(User);
+  }
 });
 
 exports.User = User;
+exports.Pot = Pot;
 // console.log(User, 'user', new User());
 
 // User.forge({'venmoID': 'vasdjf;ljklue'}).save()

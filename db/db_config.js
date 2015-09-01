@@ -15,10 +15,21 @@ db.knex.schema.hasTable('users').then(function(exists) {
       t.string('venmoID');
       t.decimal('value');
       t.boolean('isManager');
-      t.integer('fund_id');
     });
   } else {
-    console.log('yep, exists!!!');
+    console.log('yep, users exists!!!');
+  }
+});
+
+db.knex.schema.hasTable('pots').then(function(exists) {
+  if (!exists) {
+    return knex.schema.createTable('pots', function(t) {
+      t.increments('id').primary();
+      t.string('venmoID');
+      t.decimal('value');
+    });
+  } else {
+    console.log('yep, pot exists!!!');
   }
 });
 

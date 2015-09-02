@@ -39,6 +39,25 @@ db.knex.schema.hasTable('transactions').then(function(exists) {
     });
   }
 });
+
+db.knex.schema.hasTable('loans').then(function(exists) {
+  if (!exists) {
+    return knex.schema.createTable('loans', function(t) {
+      t.increments('id').primary();
+      t.decimal('principle');
+      t.decimal('interest');
+      t.integer('duration');
+      t.string('status');
+      t.timestamps();
+      t.integer('user_id').references('id').inTable('users');
+    })
+    .then(function(photos){
+      console.log('Create Table loans');
+    }).catch(function(err){
+      console.log('error creating table loans: ', err);
+    });
+  }
+});
 // db.knex.schema.hasTable('pots').then(function(exists) {
 //   if (!exists) {
 //     return knex.schema.createTable('pots', function(t) {

@@ -1,6 +1,7 @@
-var User = require('../db/models').User;
 // var Pot = require('../db/models').Pot;
+var User = require('../db/models').User;
 var Transaction = require('../db/models').Transaction;
+var Loan = require('../db/models').Loan;
 
 var postX = function (req, res, model) {
   x = req.body;
@@ -91,6 +92,21 @@ exports.postTransaction = function (req, res) {
 
 };
 
+exports.newLoan = function (req, res) {
+  var user_id = req.body.user_id;
+  var principle = req.body.principle;
+  var duration = req.body.duration;
+
+  var newLoan = new Loan ({'principle': principle, 'user_id': user_id, 'duration': duration});
+  newLoan.save()
+    .then(function(loan) {
+      console.log("we did it!!!!!!!", {loan: loan});
+      res.json({loan: loan});
+    })
+    .catch(function(err){
+      res.status(500).send(err);
+    });
+};
 
 //********* TODO:
 // exports.getPotByUserId = function (req, res) {

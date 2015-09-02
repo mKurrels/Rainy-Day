@@ -14,10 +14,19 @@ router.get('/', function (req, res) {
 router.route('/users')
   .get(reqHandlers.getAllUsers)
   .post(reqHandlers.postUser);
+router.route('/users')
+  .get(reqHandlers.getAllUsers)
+  .post(reqHandlers.postUser);
+
 
 router.route('/users/:id')
   .get(reqHandlers.getUserByID);
 
+router.route('/loans')
+  // .get(reqHandlers.getAllUsers)
+  .post(reqHandlers.newLoan);
+
+  
 // router.route('/pots')
 //   .post(reqHandlers.postPot)
 //   .get(reqHandlers.getAllPots);

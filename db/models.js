@@ -1,7 +1,5 @@
 var db = require('./db_config.js').db;
 
- // console.log("-------------------", bookshelf);
-
 var User = db.Model.extend({
   tableName: 'users',
   hasTimestamps: true,
@@ -29,9 +27,23 @@ var Transaction = db.Model.extend({
   }
 });
 
+var Loan = db.Model.extend({
+  tableName: 'loans',
+  hasTimestamps: true,
+  defaults: {
+    interest:  6.00,
+    status: 'pending',
+  },
+  user: function() {
+    return this.belongsTo(User);
+  }
+});
+
+
 exports.User = User;
-// exports.Pot = Pot;
 exports.Transaction = Transaction;
+exports.Loan = Loan;
+// exports.Pot = Pot;
 // console.log(User, 'user', new User());
 
 // User.forge({'venmoID': 'vasdjf;ljklue'}).save()

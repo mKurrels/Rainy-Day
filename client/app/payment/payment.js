@@ -1,6 +1,6 @@
 var payment = angular.module('ff.payment', []);
 
-payment.controller('paymentController', function ($scope, makePayment, userInfo) {
+payment.controller('paymentController', function ($scope, makePayment, userInfo, loan) {
 
   userInfo.getUserInfo(function (data) {
     sum = 0;
@@ -16,5 +16,10 @@ payment.controller('paymentController', function ($scope, makePayment, userInfo)
   $scope.pay = function(amount) {
     $scope.value += amount;
     makePayment.pay($scope.amount); 
+  };
+
+
+  $scope.getLoan = function (amount, duration) {
+    loan.requestLoan (amount, duration);
   };
 });

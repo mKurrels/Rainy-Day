@@ -2,8 +2,13 @@
   <h1>Payment</h1>
   <p>{{value}}</p>
   <form name="paymentForm" ng-submit='pay(amount)'>
-    <input type='number' ng-model='amount'>
+    <input type='number' ng-model='amount', placeholder="amount">
     <button>pay {{bob}}</button>
+  </form>
+  <form name="loanForm" ng-submit='getLoan(amount, duration)'>
+    <input type='number' ng-model='amount' placeholder="amount">
+    <input type='number' ng-model='duration' placeholder="duration">
+    <button>get loan</button>
   </form>
   <!-- <a href="#/signin">Already have an account? <strong>Signin</strong> ...</a> -->
 </div>

@@ -18,6 +18,25 @@ angular.module('ff.services', [])
   };
 })
 
+.factory('loan', function ($http) {
+  
+  var requestLoan = function (amount, duration) {
+    return $http({
+      method: 'POST',
+      url: 'api/loans',
+      data: {user_id: 1, principle: amount, duration: duration}
+    })
+    .then(function (resp) {
+      console.log(resp.data);
+      return resp.data;
+    });
+  };
+
+  return {
+    requestLoan: requestLoan
+  };
+})
+
 .factory('userInfo', function ($http) {
   //hardcoded for now
   //TODO get venmoID

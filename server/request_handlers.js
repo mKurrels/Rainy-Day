@@ -98,7 +98,18 @@ exports.newLoan = function (req, res) {
   var duration = req.body.duration;
 
   var newLoan = new Loan ({'principle': principle, 'user_id': user_id, 'duration': duration});
+  var newTransaction = new Transaction ({'value': principle * -1, 'user_id': user_id});
   newLoan.save()
+    .then(function(loan) {
+      return newTransaction.save()
+        .then(function(transaction) {
+          console.log("added a transaction!!!!!!!", {transaction: transaction});
+          return loan;
+        })
+        .catch(function(err){
+          res.status(500).send(err);
+        });
+    })
     .then(function(loan) {
       console.log("we did it!!!!!!!", {loan: loan});
       res.json({loan: loan});
@@ -106,6 +117,8 @@ exports.newLoan = function (req, res) {
     .catch(function(err){
       res.status(500).send(err);
     });
+
+    
 };
 
 //********* TODO:

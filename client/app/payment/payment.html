@@ -5,8 +5,8 @@
     <input type='number' ng-model='amount', placeholder="amount">
     <button>pay {{bob}}</button>
   </form>
-  <form name="loanForm" ng-submit='getLoan(amount, duration)'>
-    <input type='number' ng-model='amount' placeholder="amount">
+  <form name="loanForm" ng-submit='getLoan(loanAmount, duration)'>
+    <input type='number' ng-model='loanAmount' placeholder="amount">
     <input type='number' ng-model='duration' placeholder="duration (in months)">
     <button>get loan</button>
   </form>

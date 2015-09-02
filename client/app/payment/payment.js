@@ -21,6 +21,5 @@ payment.controller('paymentController', function ($scope, makePayment, userInfo,
 
   $scope.getLoan = function (amount, duration) {
     loan.requestLoan (amount, duration);
-    $scope.value += amount;
   };
 });

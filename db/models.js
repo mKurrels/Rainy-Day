@@ -32,7 +32,7 @@ var Loan = db.Model.extend({
   hasTimestamps: true,
   defaults: {
     interest:  6.00,
-    status: 'pending',
+    status: 'inProgress',
   },
   user: function() {
     return this.belongsTo(User);

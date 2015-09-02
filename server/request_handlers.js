@@ -31,8 +31,9 @@ exports.getAllUsers = function (req, res) {
 exports.getUserByID = function (req, res) {
   console.log(req.params.id, 'req.params.id');
   User.forge({id: req.params.id})
-    .fetch()
+    .fetch({withRelated: ['transactions']})
     .then(function (user) {
+      console.log("=================>", user);
       if (!user) {
         res.status(404).json({error: true, data: {}});
       }

@@ -1,7 +1,7 @@
 <div id='payment'>
   <h1>Payment</h1>
-  <p>{{userData}}</p>
-  <form name="paymentForm" ng-submit='pay()'>
+  <p>{{value}}</p>
+  <form name="paymentForm" ng-submit='pay(amount)'>
     <input type='number' ng-model='amount'>
     <button>pay {{bob}}</button>
   </form>

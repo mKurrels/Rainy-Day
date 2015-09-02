@@ -21,20 +21,27 @@ angular.module('ff.services', [])
 .factory('userInfo', function ($http) {
   //hardcoded for now
   //TODO get venmoID
+  var info;
   var user_id = 1;
   var getUserInfo = function (cb) {
-    return $http({
-      method: 'GET',
-      url: '/api/users/' + user_id
-    })
-    .then(function (resp) {
-      console.log('yeppers');
-      console.log(resp.data);
-      cb(resp.data);
-    });
+    if(info) {
+      cb(info);
+    } else {
+      $http({
+        method: 'GET',
+        url: '/api/users/' + user_id
+      })
+      .then(function (resp) {
+        console.log('yeppers');
+        console.log(resp.data);
+        cb(resp.data);
+        info = resp.data;
+      });
+    }
   };
 
   return {
+    // info: info,
     getUserInfo: getUserInfo
   };
 });

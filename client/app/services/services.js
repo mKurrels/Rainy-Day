@@ -4,7 +4,7 @@ angular.module('ff.services', [])
   var pay = function (amount) {
     return $http({
       method: 'POST',
-      url: '/transactions',
+      url: 'api/transactions',
       data: {user_id: 1, value: amount}
     })
     .then(function (resp) {
@@ -22,16 +22,15 @@ angular.module('ff.services', [])
   //hardcoded for now
   //TODO get venmoID
   var user_id = 1;
-  var getUserInfo = function () {
-    console.log('yeppers');
+  var getUserInfo = function (cb) {
     return $http({
       method: 'GET',
-      url: '/api/users/:id',
-      params: {user_id: user_id}
+      url: '/api/users/' + user_id
     })
     .then(function (resp) {
+      console.log('yeppers');
       console.log(resp.data);
-      return resp.data;
+      cb(resp.data);
     });
   };
 

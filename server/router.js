@@ -15,6 +15,9 @@ router.route('/users')
   .get(reqHandlers.getAllUsers)
   .post(reqHandlers.postUser);
 
+router.route('/users/:id')
+  .get(reqHandlers.getUserByID);
+
 // router.route('/pots')
 //   .post(reqHandlers.postPot)
 //   .get(reqHandlers.getAllPots);

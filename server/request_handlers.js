@@ -28,6 +28,23 @@ exports.getAllUsers = function (req, res) {
   getAllX(req, res, User);
 };
 
+exports.getUserByID = function (req, res) {
+  console.log(req.params.id, 'req.params.id');
+  User.forge({id: req.params.id})
+    .fetch()
+    .then(function (user) {
+      if (!user) {
+        res.status(404).json({error: true, data: {}});
+      }
+      else {
+        res.json({error: false, data: user});
+      }
+    })
+    .catch(function (err) {
+      res.status(500).json({error: true, data: {message: err.message}});
+    });
+};
+
 exports.postUser = function (req, res) {
   console.log('user', req.body);
   user = req.body;
@@ -58,8 +75,8 @@ exports.getAllTransactions = function (req, res) {
 };
 
 exports.postTransaction = function (req, res) {
-  var user_id = JSON.parse(req.body.user_id);
-  var value = JSON.parse(req.body.value);
+  var user_id = req.body.user_id;
+  var value = req.body.value;
 
   var newTransaction = new Transaction ({'value': value, 'user_id': user_id});
   newTransaction.save()

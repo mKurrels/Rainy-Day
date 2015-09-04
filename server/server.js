@@ -9,7 +9,7 @@ var morgan = require('morgan');
 app.use(express.static(__dirname + '/../client'));
 app.use(bodyParser.json());
 app.use('/api', api);
-app.use(morgan('combined'));
+app.use(morgan('dev'));
 
 
 var port = 3000;

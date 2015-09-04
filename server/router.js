@@ -20,7 +20,7 @@ router.route('/users')
 
 
 router.route('/users/:id')
-  .get(reqHandlers.getUserByID);
+  .get(reqHandlers.getUserInfoByID);
 
 router.route('/loans')
   // .get(reqHandlers.getAllUsers)

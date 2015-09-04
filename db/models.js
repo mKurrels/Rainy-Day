@@ -24,6 +24,9 @@ var Transaction = db.Model.extend({
   hasTimestamps: true,
   user: function() {
     return this.belongsTo(User);
+  },
+  loan: function() {
+    return this.belongsTo(Loan);
   }
 });
 
@@ -36,6 +39,9 @@ var Loan = db.Model.extend({
   },
   user: function() {
     return this.belongsTo(User);
+  },
+  transactions: function() {
+    return this.hasMany(Transaction);
   }
 });
 

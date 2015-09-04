@@ -1,3 +1,5 @@
+var Promise  = require('bluebird');
+
 var knex = require('knex')({
   client: 'sqlite3',
   connection: {
@@ -5,7 +7,8 @@ var knex = require('knex')({
   }
 });
 
-db = require('bookshelf')(knex);
+
+db = Promise.promisifyAll(require('bookshelf')(knex));
 
 db.knex.schema.hasTable('users').then(function(exists) {
   if (!exists) {
@@ -14,6 +17,7 @@ db.knex.schema.hasTable('users').then(function(exists) {
       t.increments('id').primary();
       t.string('venmoID');
       t.boolean('isManager');
+      t.string('group_id');
       t.timestamps();
       // t.integer('pot_id').references('id').inTable('pots');
       // t.date('createdAt');
@@ -31,6 +35,7 @@ db.knex.schema.hasTable('transactions').then(function(exists) {
       t.decimal('value');
       t.timestamps();
       t.integer('user_id').references('id').inTable('users');
+      t.integer('loan_id').references('id').inTable('loans');
     })
     .then(function(photos){
       console.log('Create Table transactions');

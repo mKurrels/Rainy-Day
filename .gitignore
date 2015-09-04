@@ -30,3 +30,6 @@ bower_components/
 client/lib/**
 db/ff.sqlite
 blogNotes
+**/test.*
+**/.DS_Store
+server/testDB.js

@@ -2,6 +2,8 @@
 var User = require('../db/models').User;
 var Transaction = require('../db/models').Transaction;
 var Loan = require('../db/models').Loan;
+// var Promise = require("bluebird");
+// Promise.promisify()
 
 var postX = function (req, res, model) {
   x = req.body;
@@ -29,22 +31,51 @@ exports.getAllUsers = function (req, res) {
   getAllX(req, res, User);
 };
 
-exports.getUserByID = function (req, res) {
-  console.log(req.params.id, 'req.params.id');
-  User.forge({id: req.params.id})
-    .fetch({withRelated: ['transactions']})
+
+var getAllUserInfoByID = function (user_id, cb, errCb) {
+  console.log("got to getAllUserInfoByID", "user_id", user_id);
+  var balance = 0;
+  var group_id;
+  User.forge({id: user_id})
+    .fetch({require: true, withRelated: ['transactions']})
     .then(function (user) {
-      console.log("=================>", user);
-      if (!user) {
-        res.status(404).json({error: true, data: {}});
-      }
-      else {
-        res.json({error: false, data: user});
-      }
+      console.log("got to first .then in getAllUserInfoByID");
+      User.where({group_id: user.get('group_id')})
+        .fetchAll({withRelated: ['transactions']})
+        .then(function (collection) {
+          collection.each(function(model) {
+            var transactions = model.related('transactions');
+            transactions.each(function (transaction) {
+              balance += transaction.get('value');
+            });
+          });
+          console.log("got to right before callback");
+          console.log('balance', balance, 'group_id', group_id);
+          cb(balance, user);
+        });
     })
     .catch(function (err) {
-      res.status(500).json({error: true, data: {message: err.message}});
+      console.log("oops!, I errored", err);
+      if (!errCb) {
+        console.log(err);
+      } else {
+        errCb(err);
+      }
     });
+};
+
+exports.getUserInfoByID = function (req, res) {
+
+  getAllUserInfoByID(req.params.id, respond, error);
+  
+  function respond(balance, user) {
+    res.json({error: false, user: user, groupBalance: balance});
+  }
+
+  function error (err) {
+    res.status(500).json({error: true, data: {message: err.message}});
+  }
+
 };
 
 exports.postUser = function (req, res) {
@@ -89,34 +120,53 @@ exports.postTransaction = function (req, res) {
     .catch(function(err){
       res.status(500).send(err);
     });
-
 };
+
+// var canLoan = function (user_id) {
+//   var group_id;
+//   User.forge({id: user_id})
+//     .fetch()
+//     .then(function (user) {
+//       group_id = user.get('group_id');
+//       groupBalance (group_id, )
+//     });
+// };
 
 exports.newLoan = function (req, res) {
   var user_id = req.body.user_id;
   var principle = req.body.principle;
   var duration = req.body.duration;
+  console.log("got to newLoan", user_id, principle, duration);
+  getAllUserInfoByID(user_id, makeNewLoan);
 
-  var newLoan = new Loan ({'principle': principle, 'user_id': user_id, 'duration': duration});
-  var newTransaction = new Transaction ({'value': principle * -1, 'user_id': user_id});
-  newLoan.save()
-    .then(function(loan) {
-      return newTransaction.save()
-        .then(function(transaction) {
-          console.log("added a transaction!!!!!!!", {transaction: transaction});
-          return loan;
+  function makeNewLoan(balance, user) {
+    console.log("got to makeNewLoan", "balance", balance, "user", user);
+    if (principle > balance) {
+      console.log("oops, not enough funds");
+      res.json("not enough funds");
+    } else
+    if (principle <= balance) {
+      var newLoan = new Loan ({'principle': principle, 'user_id': user_id, 'duration': duration});
+      newLoan.save()
+        .then(function(loan) {
+          console.log("added a loan!!!", loan);
+          var newTransaction = new Transaction ({'value': principle * -1, 'user_id': user_id, 'loan_id': loan.get('id')});
+          newTransaction.save()
+            .then(function(transaction) {
+              console.log("added a transaction!!!!!!!", {transaction: transaction});
+              res.json ({loan: loan, transaction: transaction});
+            });
         })
         .catch(function(err){
+          console.error("oops! error", err);
           res.status(500).send(err);
         });
-    })
-    .then(function(loan) {
-      console.log("we did it!!!!!!!", {loan: loan});
-      res.json({loan: loan});
-    })
-    .catch(function(err){
-      res.status(500).send(err);
-    });
+    }
+    
+  }
+
+  // }
+
 
     
 };

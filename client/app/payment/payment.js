@@ -4,7 +4,7 @@ payment.controller('paymentController', function ($scope, makePayment, userInfo,
 
   userInfo.getUserInfo(function (data) {
     sum = 0;
-    var payments = data.data.transactions;
+    var payments = data.user.transactions;
     console.log('payments', payments);
     for (var i = 0; i < payments.length; i++) {
       sum += payments[i].value;

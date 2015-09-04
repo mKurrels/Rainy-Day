@@ -27,6 +27,14 @@ var getAllX = function (req, res, Model) {
     });
 };
 
+
+/*******************************************
+USERS  *************************************
+********************************************/
+
+
+
+
 exports.getAllUsers = function (req, res) {
   getAllX(req, res, User);
 };
@@ -92,15 +100,10 @@ exports.postUser = function (req, res) {
     });
 };
 
-// exports.getAllPots = function (req, res) {
-//   console.log('get pots');
-//   getAllX(req, res, Pot);
-// };
 
-// exports.postPot = function (req, res) {
-//   console.log('post pots', req.body);
-//   postX(req, res, Pot);
-// };
+/*******************************************
+Transactions  *******************************
+********************************************/
 
 exports.getAllTransactions = function (req, res) {
   console.log('get Transactions');
@@ -122,15 +125,12 @@ exports.postTransaction = function (req, res) {
     });
 };
 
-// var canLoan = function (user_id) {
-//   var group_id;
-//   User.forge({id: user_id})
-//     .fetch()
-//     .then(function (user) {
-//       group_id = user.get('group_id');
-//       groupBalance (group_id, )
-//     });
-// };
+
+/*******************************************
+LOANS  *************************************
+********************************************/
+
+
 
 exports.newLoan = function (req, res) {
   var user_id = req.body.user_id;

@@ -34,7 +34,7 @@ var Loan = db.Model.extend({
   tableName: 'loans',
   hasTimestamps: true,
   defaults: {
-    interest:  6.00,
+    interest:  0.06,
     status: 'inProgress',
   },
   user: function() {
@@ -42,6 +42,15 @@ var Loan = db.Model.extend({
   },
   transactions: function() {
     return this.hasMany(Transaction);
+  },
+  totalExpectedAmount: function () {
+    // var principle = this.get('principle');
+    // var duration = this.get('duration');
+
+    // return 
+  },
+  monthlyInterest: function() {
+    return /*(this.get('interest') / 12) */ this.get('principle');
   }
 });
 

@@ -114,15 +114,29 @@ exports.postTransaction = function (req, res) {
   var user_id = req.body.user_id;
   var value = req.body.value;
 
-  var newTransaction = new Transaction ({'value': value, 'user_id': user_id});
-  newTransaction.save()
-    .then(function(transaction) {
-      console.log("we did it!!!!!!!", {transaction: transaction});
-      res.json({id: transaction.id});
-    })
-    .catch(function(err){
-      res.status(500).send(err);
-    });
+  getAllUserInfoByID(user_id, makeNewTransaction);
+
+  function makeNewTransaction(balance, user) {
+    var loan_id = user.get('loan_id');
+    var monthlyInterest;
+
+    new Loan({id: loan_id})
+      .fetch()
+      .then(function (loan) {
+        monthlyInterest = loan.dollarMonthlyInterest();
+        
+      });
+    var newTransaction = new Transaction ({'value': value, 'user_id': user_id});
+    newTransaction.save()
+      .then(function(transaction) {
+        console.log("we did it!!!!!!!", {transaction: transaction});
+        res.json({id: transaction.id});
+      })
+      .catch(function(err){
+        res.status(500).send(err);
+      });
+    
+  }
 };
 
 
@@ -156,6 +170,7 @@ exports.newLoan = function (req, res) {
               console.log("added a transaction!!!!!!!", {transaction: transaction});
               res.json ({loan: loan, transaction: transaction});
             });
+          new User({id: user_id}).save({loan_id: loan.get('id')});
         })
         .catch(function(err){
           console.error("oops! error", err);

@@ -1,0 +1,58 @@
+database notes:
+
+actions:
+
+user deposits x funds
+    get user's id
+    increase user balance by x
+    find group by user's group_id
+      update group's balance by x
+      update group's available balance by x
+    add a new transaction
+      amount = amount deposited
+      type = DEPOSIT
+      user_id = user's id
+user can withdraw funds
+    get user balance
+    get group_id
+      get group avail. balance
+        if (user balance > withdraw amount && group avail. balance > withdraw amount)
+          decrease user balance
+            decrease group avail balance
+            decrease group balance
+              add new transaction
+                amount = amount withdrawn
+                type = WITHDRAW
+                user_id = user's id
+        else 
+          say, "nope not enough funds"
+
+user can see their balance
+    get balance
+user can see group balance and available balance
+    find group by user's group_id
+      get group balance
+      get group available balance
+user can take out a loan with an amount and duration ***** transactions would be really nice *****
+  get user balance
+  get group by group_id
+    get group available balance
+    if (group available balance >= loan amount)
+      group available balance = group available balance - loan amount
+        user balance = user balance - loan amount
+        make new loan with user_id, group_id, principle, amount-paid(0)
+        make a new transaction with 
+          amount = principle
+          type = LOAN
+          user_id = user_id
+    else
+      say "nope, can't do it"
+When user pays loan (once a month), interest gets split among other users
+  find user's loan
+    get loan's monthly interest
+    var toPrinciple = amount payed - monthly interest
+
+
+
+
+

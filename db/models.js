@@ -3,21 +3,11 @@ var db = require('./db_config.js').db;
 var User = db.Model.extend({
   tableName: 'users',
   hasTimestamps: true,
-  // pot: function() {
-  //   return this.belongsTo(Pot);
-  // },
   transactions: function() {
     return this.hasMany(Transaction);
   }
 });
 
-// var Pot = db.Model.extend({
-//   tableName: 'pots',
-//   hasTimestamps: true,
-//   users: function() {
-//     return this.hasMany(User);
-//   }
-// });
 
 var Transaction = db.Model.extend({
   tableName: 'transactions',
@@ -49,8 +39,8 @@ var Loan = db.Model.extend({
 
     // return 
   },
-  monthlyInterest: function() {
-    return /*(this.get('interest') / 12) */ this.get('principle');
+  dollarMonthlyInterest: function() {
+    return (this.get('principle') * this.get('interest')) / 12; //(100 * .06) / 12;
   }
 });
 

@@ -19,9 +19,7 @@ db.knex.schema.hasTable('users').then(function(exists) {
       t.boolean('isManager');
       t.string('group_id');
       t.timestamps();
-      // t.integer('pot_id').references('id').inTable('pots');
-      // t.date('createdAt');
-      // t.date('updatedAt');
+      t.integer('loan_id').references('id').inTable('loans');
     });
   } else {
     console.log('yep, users exists!!!');

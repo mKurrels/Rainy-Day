@@ -1,4 +1,4 @@
-var express = require('express');
+  var express = require('express');
 var router = express.Router();
 var reqHandlers = require('./request_handlers');
 
@@ -26,7 +26,8 @@ router.route('/loans')
   // .get(reqHandlers.getAllUsers)
   .post(reqHandlers.newLoan);
 
-  
+router.post('/deposit', reqHandlers.deposit);
+
 // router.route('/pots')
 //   .post(reqHandlers.postPot)
 //   .get(reqHandlers.getAllPots);

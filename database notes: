@@ -4,7 +4,7 @@ actions:
 
 user deposits x funds
     get user's id
-    increase user balance by x
+    1 increase user balance by x
     find group by user's group_id
       update group's balance by x
       update group's available balance by x
@@ -12,6 +12,9 @@ user deposits x funds
       amount = amount deposited
       type = DEPOSIT
       user_id = user's id
+
+done!!!
+
 user can withdraw funds
     get user balance
     get group_id
@@ -26,7 +29,6 @@ user can withdraw funds
                 user_id = user's id
         else 
           say, "nope not enough funds"
-
 user can see their balance
     get balance
 user can see group balance and available balance
@@ -47,10 +49,21 @@ user can take out a loan with an amount and duration ***** transactions would be
           user_id = user_id
     else
       say "nope, can't do it"
-When user pays loan (once a month), interest gets split among other users
+When user pays loan (once a month), interest gets split among other users 
+  get group_id
   find user's loan
     get loan's monthly interest
     var toPrinciple = amount payed - monthly interest
+    increase amount paid by toPrinciple
+    increase user's balance by toPrinciple
+    find group
+      increase group's balance by interest
+      increase group's available balance by amount paid
+    get all members of group
+      find percientage share of group for each member
+        multiply percentage share by montly interest
+        add to that members balance
+
 
 
 

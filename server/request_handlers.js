@@ -1,9 +1,8 @@
-// var Pot = require('../db/models').Pot;
+var Group = require('../db/models').Group;
 var User = require('../db/models').User;
 var Transaction = require('../db/models').Transaction;
 var Loan = require('../db/models').Loan;
-// var Promise = require("bluebird");
-// Promise.promisify()
+
 
 var postX = function (req, res, model) {
   x = req.body;
@@ -31,6 +30,88 @@ var getAllX = function (req, res, Model) {
 /*******************************************
 USERS  *************************************
 ********************************************/
+
+exports.postUser = function (req, res) {
+  console.log('user', req.body);
+  return new User(req.body).save()
+    .then(function(user) {
+      console.log("we did it!!!!!!!", {user: user});
+      res.json(user);
+    })
+    .catch(function(err){
+      res.status(500).send(err);
+    });
+};
+
+
+var changeUserBalance = function (user_id, amount) {
+  return new User({id: user_id}).fetch()
+    .then(function(user){
+      return user.save({balance: user.get('balance') + amount});
+    });
+};
+
+var changeGroupBalance = function (group_id, changeAvailable, changeTotal) {
+  console.log('got to the place', group_id);
+  return new Group({id: group_id}).fetch()
+    .then(function(group){
+      console.log('group', group);
+      return group.save({
+        available_balance: group.get('available_balance') + changeAvailable,
+        balance: group.get('balance') + changeTotal
+      });
+    });
+};
+
+var addTransaction = function (user_id, value, type) {
+  return new Transaction()
+    .save({
+      user_id: user_id,
+      value: value,
+      type: type
+    });
+};
+
+exports.deposit = function (req, res) {
+  console.log('got here');
+  var user_id = req.body.user_id;
+  var amount = req.body.amount;
+  var group_id;
+  changeUserBalance(user_id, amount)
+    .then(function (user) {
+      console.log('1 got here');
+      group_id = user.get('group_id');
+      return changeGroupBalance(group_id, amount, amount);
+    })
+    .then(function (group) {
+      console.log('2 got here');
+      return addTransaction(user_id, amount, "DEPOSIT");
+    })
+    .then(function (transaction) {
+      console.log('3 got here');
+      res.json({error: false, data: {transaction: transaction}});
+    })
+    .catch(function (err){
+      console.log(err.message);
+      res.status(500).json({error: true, data: {message: err.message}});
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -86,19 +167,6 @@ exports.getUserInfoByID = function (req, res) {
 
 };
 
-exports.postUser = function (req, res) {
-  console.log('user', req.body);
-  user = req.body;
-  var newUser = new User (user);
-  newUser.save()
-    .then(function(user) {
-      console.log("we did it!!!!!!!", {user: user});
-      res.json({id: user.id});
-    })
-    .catch(function(err){
-      res.status(500).send(err);
-    });
-};
 
 
 /*******************************************

@@ -5,6 +5,12 @@ var User = db.Model.extend({
   hasTimestamps: true,
   transactions: function() {
     return this.hasMany(Transaction);
+  },
+  group: function() {
+    return this.belongsTo(Group);
+  },
+  loan: function() {
+    return this.hasOne(Loan);
   }
 });
 
@@ -14,10 +20,19 @@ var Transaction = db.Model.extend({
   hasTimestamps: true,
   user: function() {
     return this.belongsTo(User);
-  },
-  loan: function() {
-    return this.belongsTo(Loan);
   }
+});
+
+var Group = db.Model.extend({
+  tableName: 'groups',
+  hasTimestamps: true,
+  users: function() {
+    return this.hasMany(User);
+  },
+  defaults: {
+    balance:  0,
+    available_balance: 0,
+  },
 });
 
 var Loan = db.Model.extend({
@@ -26,18 +41,10 @@ var Loan = db.Model.extend({
   defaults: {
     interest:  0.06,
     status: 'inProgress',
+    amount_paid: 0
   },
   user: function() {
     return this.belongsTo(User);
-  },
-  transactions: function() {
-    return this.hasMany(Transaction);
-  },
-  totalExpectedAmount: function () {
-    // var principle = this.get('principle');
-    // var duration = this.get('duration');
-
-    // return 
   },
   dollarMonthlyInterest: function() {
     return (this.get('principle') * this.get('interest')) / 12; //(100 * .06) / 12;
@@ -48,7 +55,7 @@ var Loan = db.Model.extend({
 exports.User = User;
 exports.Transaction = Transaction;
 exports.Loan = Loan;
-// exports.Pot = Pot;
+exports.Group = Group;
 // console.log(User, 'user', new User());
 
 // User.forge({'venmoID': 'vasdjf;ljklue'}).save()

@@ -21,14 +21,17 @@ user can withdraw funds
       get group avail. balance
         if (user balance > withdraw amount && group avail. balance > withdraw amount)
           decrease user balance
-            decrease group avail balance
-            decrease group balance
-              add new transaction
-                amount = amount withdrawn
-                type = WITHDRAW
-                user_id = user's id
+          decrease group avail balance
+          decrease group balance
+            add new transaction
+              amount = amount withdrawn
+              type = WITHDRAW
+              user_id = user's id
         else 
           say, "nope not enough funds"
+
+done!!
+
 user can see their balance
     get balance
 user can see group balance and available balance

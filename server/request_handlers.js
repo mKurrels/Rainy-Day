@@ -9,7 +9,7 @@ var postX = function (req, res, model) {
   console.log('x', x);
   model.forge(x).save()
     .then(function (x) {
-      res.json({id: x.get('venmoID'), x: x});
+      res.json({x: x});
     })
     .catch(function (err) {
       res.status(500).json({error: true, data: {message: err.message}});
@@ -26,6 +26,20 @@ var getAllX = function (req, res, Model) {
     });
 };
 
+
+/*******************************************
+Groups  *************************************
+********************************************/
+
+exports.postGroup = function (req, res) {
+
+  postX(req, res, Group);
+};
+
+exports.getGroups = function (req, res) {
+  console.log('getGroups');
+  getAllX(req, res, Group);
+};
 
 /*******************************************
 USERS  *************************************
@@ -55,15 +69,15 @@ var changeGroupBalance = function (group_id, changeAvailable, changeTotal) {
   console.log('got to the place', group_id);
   return new Group({id: group_id}).fetch()
     .then(function(group){
-      console.log('group', group);
-      return group.save({
-        available_balance: group.get('available_balance') + changeAvailable,
-        balance: group.get('balance') + changeTotal
+      group.save({
+        available_balance: group.get('available_balance')*1 + changeAvailable*1,
+        balance: group.get('balance')*1 + changeTotal*1
       });
     });
 };
 
 var addTransaction = function (user_id, value, type) {
+  console.log('userid', user_id, 'value', value, 'type', type);
   return new Transaction()
     .save({
       user_id: user_id,
@@ -98,14 +112,60 @@ exports.deposit = function (req, res) {
 };
 
 
+var getUserByID = function (user_id) {
+  return new User({id: user_id}).fetch()
+    .then(function (user) {
+      return user;
+    });
+};
 
+var getGroupBalancesByUserID = function (user_id) {
+  return new User({id: user_id}).fetch({withRelated: ['group']})
+    .then(function (user) {
+      var available_balance = user.related('group').get('available_balance');
+      var balance = user.related('group').get('available_balance');
+      return {
+        available_balance: available_balance,
+        balance: balance
+      };
+    });
+};
 
+exports.withdraw = function (req, res) {
+  var user_id = req.body.user_id;
+  var amount = req.body.amount;
+  var userBalance;
+  var group_id;
+  new User({id: user_id}).fetch()
+    .then(function (user) {
+      console.log('1');
+      userBalance = user.get('balance');
+      group_id = user.get('group_id'); 
+      return getGroupBalancesByUserID(user_id);
+    })
+    .then(function (balances) {
+      console.log('3');
 
+      if (userBalance > amount && balances.available_balance > amount) {
+        console.log('4', 'amount', amount);
+        changeGroupBalance(user_id, amount*-1, amount*-1);
+        changeUserBalance(user_id, amount*-1);
+        return addTransaction(user_id, amount*-1, "WITHDRAW");
+      } else {
+        throw new Error('Not Enough Funds!'); 
+      }
 
+    })
+    .then(function (transaction) {
 
-
-
-
+      console.log('3 got here to withdraw end');
+      res.json({error: false, data: {transaction: transaction}});
+    })
+    .catch(function (err){
+      console.log(err.message);
+      res.status(500).json({error: true, data: {message: err.message}});
+    });
+};
 
 
 

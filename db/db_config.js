@@ -15,7 +15,7 @@ db.knex.schema.hasTable('users').then(function(exists) {
     return knex.schema.createTable('users', function(t) {
       t.increments('id').primary();
       t.integer('balance');
-      t.string('group_id');
+      t.integer('group_id');
       t.timestamps();
       t.integer('loan_id').references('id').inTable('loans');
     });

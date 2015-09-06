@@ -17,6 +17,9 @@ router.route('/users')
 router.route('/users')
   .get(reqHandlers.getAllUsers)
   .post(reqHandlers.postUser);
+router.route('/groups')
+  .get(reqHandlers.getGroups)
+  .post(reqHandlers.postGroup);
 
 
 router.route('/users/:id')
@@ -27,6 +30,7 @@ router.route('/loans')
   .post(reqHandlers.newLoan);
 
 router.post('/deposit', reqHandlers.deposit);
+router.post('/withdraw', reqHandlers.withdraw);
 
 // router.route('/pots')
 //   .post(reqHandlers.postPot)

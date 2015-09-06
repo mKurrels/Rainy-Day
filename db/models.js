@@ -11,7 +11,10 @@ var User = db.Model.extend({
   },
   loan: function() {
     return this.hasOne(Loan);
-  }
+  },
+  defaults: {
+    balance:  0,
+  },
 });
 
 

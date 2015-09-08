@@ -50,7 +50,7 @@ var Loan = db.Model.extend({
     return this.belongsTo(User);
   },
   dollarMonthlyInterest: function() {
-    return (this.get('principle') * this.get('interest')) / 12; //(100 * .06) / 12;
+    return (this.get('principle') * this.get('interest')) / this.get('duration'); //(100 * .06) / 12;
   }
 });
 

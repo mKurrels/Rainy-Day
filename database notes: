@@ -34,24 +34,40 @@ done!!
 
 user can see their balance
     get balance
+
+done!!
+
+
 user can see group balance and available balance
     find group by user's group_id
       get group balance
       get group available balance
+
+
+
 user can take out a loan with an amount and duration ***** transactions would be really nice *****
-  get user balance
-  get group by group_id
-    get group available balance
-    if (group available balance >= loan amount)
-      group available balance = group available balance - loan amount
+  make new loan with 
+    user_id, 
+    group_id, 
+    principle, 
+    amount-paid(0)
+  
+      get user balance
+      get group by group_id
+      get group available balance
+        if (group available balance >= loan amount)
+          group available balance = group available balance - loan amount
         user balance = user balance - loan amount
-        make new loan with user_id, group_id, principle, amount-paid(0)
         make a new transaction with 
           amount = principle
           type = LOAN
           user_id = user_id
     else
       say "nope, can't do it"
+
+done!!!!
+
+
 When user pays loan (once a month), interest gets split among other users 
   get group_id
   find user's loan
@@ -59,6 +75,10 @@ When user pays loan (once a month), interest gets split among other users
     var toPrinciple = amount payed - monthly interest
     increase amount paid by toPrinciple
     increase user's balance by toPrinciple
+    make a new transaction with 
+          amount = principle
+          type = LOAN
+          user_id = user_id
     find group
       increase group's balance by interest
       increase group's available balance by amount paid
@@ -68,7 +88,24 @@ When user pays loan (once a month), interest gets split among other users
         add to that members balance
 
 
+test:
+add group 1
+add user 1 with group 1
+add user 2 with group 1
+add user 3 with group 1
+add user 4 with group 1
+deposit 100 for user 1
+deposit 200 for user 2
+deposit 300 for user 3
+take 100 (1 month) loan for user 4
+pay loan
 
+results::::::::::::::
+user1: 101
+user2: 102
+user3: 103
+user4: 0
+group1: 606, 606
 
 
 

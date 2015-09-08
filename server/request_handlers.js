@@ -3,6 +3,10 @@ var User = require('../db/models').User;
 var Transaction = require('../db/models').Transaction;
 var Loan = require('../db/models').Loan;
 
+/*******************************************
+helpers  *************************************
+********************************************/
+
 
 var postX = function (req, res, model) {
   x = req.body;
@@ -41,6 +45,11 @@ exports.getGroups = function (req, res) {
   getAllX(req, res, Group);
 };
 
+
+exports.getLoans = function (req, res) {
+  console.log('getLoans');
+  getAllX(req, res, Loan);
+};
 /*******************************************
 USERS  *************************************
 ********************************************/
@@ -66,10 +75,10 @@ var changeUserBalance = function (user_id, amount) {
 };
 
 var changeGroupBalance = function (group_id, changeAvailable, changeTotal) {
-  console.log('got to the place', group_id);
+  console.log('got to the place', group_id, changeAvailable, changeTotal);
   return new Group({id: group_id}).fetch()
     .then(function(group){
-      group.save({
+      return group.save({
         available_balance: group.get('available_balance')*1 + changeAvailable*1,
         balance: group.get('balance')*1 + changeTotal*1
       });
@@ -95,10 +104,7 @@ exports.deposit = function (req, res) {
     .then(function (user) {
       console.log('1 got here');
       group_id = user.get('group_id');
-      return changeGroupBalance(group_id, amount, amount);
-    })
-    .then(function (group) {
-      console.log('2 got here');
+      changeGroupBalance(group_id, amount, amount);
       return addTransaction(user_id, amount, "DEPOSIT");
     })
     .then(function (transaction) {
@@ -148,7 +154,7 @@ exports.withdraw = function (req, res) {
 
       if (userBalance > amount && balances.available_balance > amount) {
         console.log('4', 'amount', amount);
-        changeGroupBalance(user_id, amount*-1, amount*-1);
+        changeGroupBalance(group_id, amount*-1, amount*-1);
         changeUserBalance(user_id, amount*-1);
         return addTransaction(user_id, amount*-1, "WITHDRAW");
       } else {
@@ -167,11 +173,141 @@ exports.withdraw = function (req, res) {
     });
 };
 
+var addLoan = function (user_id, principle, duration) {
+  console.log('@@@@@@@@@@ addloan', user_id, principle, duration);
+  return new Loan()
+    .save({
+      user_id: user_id,
+      principle: principle,
+      duration: duration
+    });
+};
 
 
 
+exports.newLoan = function (req, res) {
+
+  var user_id = req.body.user_id;
+  var principle = req.body.principle;
+  var duration = req.body.duration;
+
+  new User({id: user_id}).fetch()
+  .then(function (user) {
+
+    console.log('1');
+    userBalance = user.get('balance');
+    group_id = user.get('group_id'); 
+    return getGroupBalancesByUserID(user_id);
+  })
+  .then(function (balances) {
+
+    console.log('3');
+    if (balances.available_balance > principle) {
+      console.log('4', 'principle', principle);
+      changeGroupBalance(group_id, principle*-1, 0);
+      changeUserBalance(user_id, principle*-1);
+      addTransaction(user_id, principle*-1, "LOAN");
+      return addLoan(user_id, principle, duration);
+    } else {
+      throw new Error('Not Enough Funds!'); 
+    }
+  })
+  .then(function (loan) {
+
+    console.log('3 got here to withdraw end');
+    res.json({error: false, data: {loan: loan}});
+  })
+  .catch(function (err){
+
+    console.log(err.message);
+    res.status(500).json({error: true, data: {message: err.message}});
+  });
+};
 
 
+var payLoan = function (loan, amount) {
+ 
+  console.log(loan, 'loan');
+
+  //this part needs to be better, but I have it this way for now for simplicity
+  var toInterest = loan.dollarMonthlyInterest();
+  var toPrinciple = amount - toInterest;
+  console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%% toInterest', toInterest, 'toPrinciple', toPrinciple);
+  return loan.save({amount_paid: toPrinciple})
+  .then(function (laon) {  
+    return {toInterest: toInterest, toPrinciple: toPrinciple};
+  });
+};
+
+//there will be rounding errors which will make the members add up to more
+//or less than the group balance. How should I fix this?
+var payGroup = function (group_id, pmt) {
+  var toInterest = pmt.toInterest;
+  var toPrinciple = pmt.toPrinciple;
+  var addToGroupBalance = 0;
+  // console.log('toInterest', toInterest, 'toPrinciple', toPrinciple);
+  var total = 0;
+  return new Group({id: group_id}).fetch({withRelated: ['users']})
+    .then(function (group) {
+      // console.log('---------------------- group', group);
+      var members = (group.related('users'));
+      // console.log('---------------------- members', JSON.stringify(members));
+      members.each(function(member) {
+        var memberBalance = member.get('balance');
+        if (memberBalance && memberBalance > 0) {
+          total += memberBalance;
+        }
+      });
+        // async (maybe eachseries)
+      members.each(function(member) {
+        var memberBalance = member.get('balance');
+        // console.log('----------------------1 memberBalance', memberBalance, total);
+
+        if (memberBalance && memberBalance > 0) {
+          var toAdd = (memberBalance / total) * toInterest;
+          // console.log('userBalance', toAdd + memberBalance);
+          changeUserBalance(member.get('id'), toAdd);
+          addToGroupBalance += toAdd;
+        }
+      });
+      return changeGroupBalance(group_id, toInterest + toPrinciple + addToGroupBalance, addToGroupBalance);
+    });
+};
+ // payGroup(1, 6);
+
+exports.newPayment = function (req, res) {
+  console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%% newPayment');
+
+  var user_id = req.body.user_id;
+  var amount = req.body.amount;
+  var loan_id;
+  var group_id;
+
+  new User({id: user_id}).fetch({withRelated: ['loan']})
+  .then(function (user) {
+
+    console.log('1', /*JSON.stringify(*/user.related('loan')/*)*/);
+    group_id = user.get('group_id');  
+    return payLoan(user.related('loan'), amount);
+  })
+  .then(function (pmts) {
+
+    console.log('2  pmts', pmts);
+    changeUserBalance(user_id, pmts.toPrinciple);
+    payGroup(group_id, pmts);
+    return addTransaction(user_id, amount, "PAYMENT");
+  })
+  .then(function (transaction) {
+
+    console.log('3 got here to withdraw end');
+    res.json({error: false, data: {transaction: transaction}});
+  })
+  .catch(function (err){
+
+    console.log(err.message);
+    res.status(500).json({error: true, data: {message: err.message}});
+  });
+};
 
 
 
@@ -238,89 +374,33 @@ exports.getAllTransactions = function (req, res) {
   getAllX(req, res, Transaction);
 };
 
-exports.postTransaction = function (req, res) {
-  var user_id = req.body.user_id;
-  var value = req.body.value;
+// exports.postTransaction = function (req, res) {
+//   var user_id = req.body.user_id;
+//   var value = req.body.value;
 
-  getAllUserInfoByID(user_id, makeNewTransaction);
+//   getAllUserInfoByID(user_id, makeNewTransaction);
 
-  function makeNewTransaction(balance, user) {
-    var loan_id = user.get('loan_id');
-    var monthlyInterest;
+//   function makeNewTransaction(balance, user) {
+//     var loan_id = user.get('loan_id');
+//     var monthlyInterest;
 
-    new Loan({id: loan_id})
-      .fetch()
-      .then(function (loan) {
-        monthlyInterest = loan.dollarMonthlyInterest();
+//     new Loan({id: loan_id})
+//       .fetch()
+//       .then(function (loan) {
+//         monthlyInterest = loan.dollarMonthlyInterest();
         
-      });
-    var newTransaction = new Transaction ({'value': value, 'user_id': user_id});
-    newTransaction.save()
-      .then(function(transaction) {
-        console.log("we did it!!!!!!!", {transaction: transaction});
-        res.json({id: transaction.id});
-      })
-      .catch(function(err){
-        res.status(500).send(err);
-      });
+//       });
+//     var newTransaction = new Transaction ({'value': value, 'user_id': user_id});
+//     newTransaction.save()
+//       .then(function(transaction) {
+//         console.log("we did it!!!!!!!", {transaction: transaction});
+//         res.json({id: transaction.id});
+//       })
+//       .catch(function(err){
+//         res.status(500).send(err);
+//       });
     
-  }
-};
-
-
-/*******************************************
-LOANS  *************************************
-********************************************/
-
-
-
-exports.newLoan = function (req, res) {
-  var user_id = req.body.user_id;
-  var principle = req.body.principle;
-  var duration = req.body.duration;
-  console.log("got to newLoan", user_id, principle, duration);
-  getAllUserInfoByID(user_id, makeNewLoan);
-
-  function makeNewLoan(balance, user) {
-    console.log("got to makeNewLoan", "balance", balance, "user", user);
-    if (principle > balance) {
-      console.log("oops, not enough funds");
-      res.json("not enough funds");
-    } else
-    if (principle <= balance) {
-      var newLoan = new Loan ({'principle': principle, 'user_id': user_id, 'duration': duration});
-      newLoan.save()
-        .then(function(loan) {
-          console.log("added a loan!!!", loan);
-          var newTransaction = new Transaction ({'value': principle * -1, 'user_id': user_id, 'loan_id': loan.get('id')});
-          newTransaction.save()
-            .then(function(transaction) {
-              console.log("added a transaction!!!!!!!", {transaction: transaction});
-              res.json ({loan: loan, transaction: transaction});
-            });
-          new User({id: user_id}).save({loan_id: loan.get('id')});
-        })
-        .catch(function(err){
-          console.error("oops! error", err);
-          res.status(500).send(err);
-        });
-    }
-    
-  }
-
-  // }
-
-
-    
-};
-
-//********* TODO:
-// exports.getPotByUserId = function (req, res) {
-//   console.log(req.params);
-// };
-
-// exports.getAllUsersByPot = function (req, res) {
-
+//   }
 // };
 
 

@@ -1,7 +1,7 @@
 var auth = angular.module('ff.auth', []);
 
-auth.controller('authController', function ($scope, $location, userInfo) {
+auth.controller('authController', function (authorize, $scope, $location, userInfo) {
   // $scope.value = 
-  $location.path('/payment');
+  // $location.path('/payment');
 });
 

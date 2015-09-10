@@ -21,6 +21,7 @@
     "bookshelf": "~0.8.1",
     "dwolla": "^0.1.5",
     "express": "^4.13.3",
+    "express-session": "^1.11.3",
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-watch": "^0.6.1",
@@ -28,6 +29,9 @@
     "grunt-shell": "^1.1.2",
     "knex": "^0.6.10",
     "morgan": "^1.6.1",
+    "passport": "^0.3.0",
+    "passport-dwolla": "^1.0.0",
+    "session": "^0.1.0",
     "sqlite3": "^3.0.10"
   }
 }

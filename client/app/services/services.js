@@ -1,4 +1,23 @@
 angular.module('ff.services', [])
+
+.factory('authorize', function ($http, $location) {
+  
+  // var getRedirect = function (amount) {
+  //   return $http({
+  //     method: 'GET',
+  //     url: 'api/auth',
+  //   })
+  //   .then(function (resp) {
+  //     $location.path(resp.data);
+  //     console.log(resp.data);
+  //   });
+  // };
+
+  // return {
+  //   getRedirect: getRedirect
+  // };
+})
+
 .factory('makePayment', function ($http) {
   
   var pay = function (amount) {

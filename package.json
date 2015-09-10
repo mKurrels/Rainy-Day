@@ -36,7 +36,6 @@
     "passport": "^0.3.0",
     "passport-dwolla": "^1.0.0",
     "pg": "^4.4.1",
-    "session": "^0.1.0",
-    "sqlite3": "^3.0.10"
+    "session": "^0.1.0"
   }
 }

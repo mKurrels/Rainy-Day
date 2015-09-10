@@ -13,6 +13,6 @@ var options = {
 
 var port = process.env.PORT || 8443;
 
-https.createServer(options, app).listen(8443);
+https.createServer(options, app).listen(port);
 
 //refactor above to use process.env variables

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var reqHandlers = require('./request_handlers');
+
 var passport = require('passport');
 
 router.use(function timeLog(req, res, next) {

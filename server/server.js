@@ -12,3 +12,5 @@ var options = {
 };
 
 https.createServer(options, app).listen(8443);
+
+//refactor above to use process.env variables

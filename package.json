@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node server/server.js"
   },
+  "engines": {
+    "node": "0.12.7"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mKurrels/2015-06-thesis.git"

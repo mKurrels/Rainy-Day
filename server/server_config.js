@@ -8,8 +8,8 @@ var session = require('express-session');
 var fs = require('fs');
 var passport = require('passport');
 var DwollaStrategy = require('passport-dwolla').Strategy;
-var DWOLLA_KEY = require('../api').key;
-var DWOLLA_SECRET = require('../api').secret;
+var DWOLLA_KEY = process.env.KEY || require('../api').key;
+var DWOLLA_SECRET = process.env.SECRET || require('../api').secret;
 // var dwolla = require('dwolla');
 // dwolla.sandbox = true;
 

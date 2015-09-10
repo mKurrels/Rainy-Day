@@ -1,10 +1,8 @@
 var Promise  = require('bluebird');
 
 var knex = require('knex')({
-  client: 'sqlite3',
-  connection: {
-    filename: __dirname + "/ff.sqlite"
-  }
+  client: 'pg',
+  connection: process.env.DATABASE_URL
 });
 
 db = Promise.promisifyAll(require('bookshelf')(knex));

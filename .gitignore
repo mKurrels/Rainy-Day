@@ -34,6 +34,5 @@ blogNotes
 **/.DS_Store
 server/testDB.js
 api.js
-cert.pem
-key.pem
+
 

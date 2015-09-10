@@ -11,6 +11,8 @@ var options = {
   cert: fs.readFileSync(__dirname + '/../cert.pem')
 };
 
+var port = process.env.PORT || 8443;
+
 https.createServer(options, app).listen(8443);
 
 //refactor above to use process.env variables

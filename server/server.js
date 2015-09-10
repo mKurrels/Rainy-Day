@@ -1,10 +1,7 @@
 var https = require('https');
 var fs = require('fs');
 
-
-
 var app = require('./server_config');
-
 
 var options = {
   key: fs.readFileSync(__dirname + '/../key.pem'),

@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var reqHandlers = require('./request_handlers');
-var api = require('../api.js');
 var passport = require('passport');
 
 router.use(function timeLog(req, res, next) {
@@ -57,10 +56,6 @@ router.get('/auth',
     // The request will be redirected to Dwolla for authentication, so this
     // function will not be called.
   
-
-  // res.redirect('https://uat.dwolla.com/oauth/v2/authenticate?client_id='+ api.key + 
-  //              '&response_type=code&redirect_uri=' + redirect_uri +
-  //              '&scope=transactions');
     console.log('oh no!!! i shouldnt be called!');
   });
 

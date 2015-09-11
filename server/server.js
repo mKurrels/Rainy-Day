@@ -1,4 +1,5 @@
 var https = require('https');
+var http = require('http');
 var fs = require('fs');
 var pg = require('pg');
 
@@ -27,6 +28,9 @@ console.log('**********************************', options);
 
 var port = process.env.PORT || 8443;
 
+if (process.env.DATABASE_URL) {
+  http.createServer(options, app).listen(port);
+}
 https.createServer(options, app).listen(port);
 
 //refactor above to use process.env variables

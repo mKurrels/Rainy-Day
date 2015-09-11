@@ -4,7 +4,6 @@ var pg = require('pg');
 
 if (process.env.DATABASE_URL) { 
   pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client) {
-    console.log("******************", client);
     if (err) throw err;
     console.log('Connected to postgres! Getting schemas...');
 

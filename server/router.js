@@ -9,6 +9,9 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
+router.get('/', function (req, res) {
+  res.send('hello world');
+});
 router.route('/users')
   .get(reqHandlers.getAllUsers)
   .post(reqHandlers.postUser);

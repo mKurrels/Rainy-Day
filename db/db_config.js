@@ -2,12 +2,19 @@ var Promise  = require('bluebird');
 
 var config = {
   client: 'sqlite3',
-  connection: process.env.DATABASE_URL || {
+  connection: /*process.env.DATABASE_URL || */{
     filename: __dirname + "/ff.sqlite"
   }
 };
 if (process.env.DATABASE_URL) {
   config.client = 'pg';
+  config.connection = {
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PW,
+    database: process.env.DATABASE,
+    charset: 'utf8'
+  };
 }
 
 var knex = require('knex')(config);

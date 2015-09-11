@@ -19,21 +19,19 @@ pg.connect(url + "?ssl=true", function(err, client) {
 
 var app = require('./server_config');
 
-// var options = {
-//   key: process.env.keypem || fs.readFileSync(__dirname + '/../key.pem'),
-//   cert: process.env.certpem || fs.readFileSync(__dirname + '/../cert.pem')
-// };
+var options = {
+  key: process.env.keypem || fs.readFileSync(__dirname + '/../key.pem'),
+  cert: process.env.certpem || fs.readFileSync(__dirname + '/../cert.pem')
+};
 
-// console.log('**********************************', options);
+console.log('**********************************', options);
 
 var port = process.env.PORT || 8443;
 
 if (process.env.DATABASE_URL) {
-  console.log('Im in the right place');
   app.listen(port);
 } else {
-  console.log('im in the wrong place');
-  app.listen(port);
+  https.createServer(options, app).listen(port);
 }
 
 //refactor above to use process.env variables

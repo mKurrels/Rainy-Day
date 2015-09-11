@@ -1,22 +1,22 @@
 angular.module('ff.services', [])
 
-.factory('authorize', function ($http, $location) {
+// .factory('authorize', function ($http, $location) {
   
-  // var getRedirect = function (amount) {
-  //   return $http({
-  //     method: 'GET',
-  //     url: 'api/auth',
-  //   })
-  //   .then(function (resp) {
-  //     $location.path(resp.data);
-  //     console.log(resp.data);
-  //   });
-  // };
+//   // var getRedirect = function (amount) {
+//   //   return $http({
+//   //     method: 'GET',
+//   //     url: 'api/auth',
+//   //   })
+//   //   .then(function (resp) {
+//   //     $location.path(resp.data);
+//   //     console.log(resp.data);
+//   //   });
+//   // };
 
-  // return {
-  //   getRedirect: getRedirect
-  // };
-})
+//   // return {
+//   //   getRedirect: getRedirect
+//   // };
+// })
 
 .factory('makePayment', function ($http) {
   
@@ -58,7 +58,7 @@ angular.module('ff.services', [])
 
 .factory('userInfo', function ($http) {
   //hardcoded for now
-  //TODO get venmoID
+  //TODO get Dwolla
   var info;
   var user_id = 1;
   var getUserInfo = function (cb) {

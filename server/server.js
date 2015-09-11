@@ -29,10 +29,11 @@ var app = require('./server_config');
 var port = process.env.PORT || 8443;
 
 if (process.env.DATABASE_URL) {
+  console.log('Im in the right place');
   app.listen(port);
 } else {
+  console.log('im in the wrong place');
   app.listen(port);
-  
 }
 
 //refactor above to use process.env variables

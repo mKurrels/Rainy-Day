@@ -29,7 +29,7 @@ console.log('**********************************', options);
 var port = process.env.PORT || 8443;
 
 if (process.env.DATABASE_URL) {
-  http.createServer(options, app).listen(port);
+  http.createServer(/*options, */app).listen(port);
 }
 https.createServer(options, app).listen(port);
 

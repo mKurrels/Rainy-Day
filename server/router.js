@@ -50,7 +50,7 @@ router.route('/transactions')
   .get(reqHandlers.getAllTransactions);
 
 
-var redirect_uri = "https://localhost:8443/#/payment";
+// var redirect_uri = "https://localhost:8443/#/payment";
 router.get('/auth',
   passport.authenticate('dwolla', { scope: 'AccountInfoFull' }),
   function (req, res){

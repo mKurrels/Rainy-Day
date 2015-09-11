@@ -1,11 +1,18 @@
-var Promise  = require('bluebird');
+// var Promise  = require('bluebird');
 
+var url = process.env.DATABASE_URL || require('../api').url;
 var config = {
-  client: 'pg' || 'sqlite3',
-  connection: process.env.DATABASE_URL + "?ssl=true" || {
-    filename: __dirname + "/ff.sqlite"
-  }
+  client: 'pg',
+  connection: url + "?ssl=true"
 };
+
+// var config = {
+//   client: 'sqlite3',
+//   connection: {
+//     filename: __dirname + "/ff.sqlite"
+//   }
+// };
+
 // if (process.env.DATABASE_URL) {
   // config.client = 'pg';
   // config.connection = {

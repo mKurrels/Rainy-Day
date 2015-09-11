@@ -30,7 +30,9 @@ var port = process.env.PORT || 8443;
 
 if (process.env.DATABASE_URL) {
   app.listen(port);
+} else {
+  app.listen(port);
+  
 }
-app.listen(port);
 
 //refactor above to use process.env variables

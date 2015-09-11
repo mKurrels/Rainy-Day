@@ -12,7 +12,7 @@ if (process.env.DATABASE_URL) {
 
 var knex = require('knex')(config);
 
-db = Promise.promisifyAll(require('bookshelf')(knex));
+db = /*Promise.promisifyAll*/(require('bookshelf')(knex));
 
 db.knex.schema.hasTable('users').then(function(exists) {
   if (!exists) {

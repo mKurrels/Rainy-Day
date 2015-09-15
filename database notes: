@@ -1,4 +1,20 @@
+auth notes:
+  client sends user to server rout
+  server sends user to dwolla
+  dwolla sends user to redirect url (on my client) with a code
+  //im here
+  when user wants to do anything, send code to server
+  server uses code (plus client id etc) to get access token
+  then updates the database with (eg payment)
+  then makes the actual payment with dwolla token
+  then, when the payment goes through, notifies client that it worked
+
+
+
+
+
 database notes:
+
 
 actions:
 

@@ -1,21 +1,20 @@
-
 <!DOCTYPE html>
-<html lang="en" ng-app='ff'>
+<html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>Rainy Day</title>
+  <title>Starter Template - Materialize</title>
 
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link type="text/css" rel="stylesheet" href="materialize/css/materialize.css"  media="screen,projection"/>
-  <!-- <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/> -->
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
   <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"></a>
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="https://github.com/mKurrels">github.com/mKurrels</a></li>
+        <li><a href="#">Navbar Link</a></li>
       </ul>
 
       <ul id="nav-mobile" class="side-nav">
@@ -24,36 +23,27 @@
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
   </nav>
-  <div ng-view></div>
-  
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">Starter Template</h1>
+      <div class="row center">
+        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+      </div>
+      <div class="row center">
+        <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light orange">Get Started</a>
+      </div>
+      <br><br>
+
+    </div>
+  </div>
 
 
-
-  <!--  Scripts-->
-  <script src="lib/angular/angular.js"></script>
-  <script src="lib/angular-route/angular-route.js"></script>
-  <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="lib/jquery/dist/jquery.min.js"></script>
-  <script src="app/payment/payment.js"></script>
-  <script src="app/auth/auth.js"></script>
-  <script src="app/services/services.js"></script>
-  <script src="app/app.js"></script>
-  <script src="materialize/js/materialize.js"></script>
-
-  </body>
-</html>
-
-
-
-
-
-
-
-  <!-- <div class="container">
-    <div class="section"> -->
+  <div class="container">
+    <div class="section">
 
       <!--   Icon Section   -->
-       <!-- <div class="row">
+      <div class="row">
         <div class="col s12 m4">
           <div class="icon-block">
             <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
@@ -88,9 +78,9 @@
     <div class="section">
 
     </div>
-  </div>  -->
+  </div>
 
-  <!-- <footer class="page-footer orange">
+  <footer class="page-footer orange">
     <div class="container">
       <div class="row">
         <div class="col l6 s12">
@@ -121,7 +111,16 @@
     </div>
     <div class="footer-copyright">
       <div class="container">
-      Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Michael Kurrels</a>
+      Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
       </div>
     </div>
-  </footer> -->
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="../../bin/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>

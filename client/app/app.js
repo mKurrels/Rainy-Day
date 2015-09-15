@@ -9,7 +9,7 @@ var ff = angular.module('ff', [
 ff.config(function($routeProvider, $httpProvider, $urlRouterProvider) {
 
   //this doesn't work for some reason:
-  //$urlRouterProvider.otherwise('/payment');
+  // $urlRouterProvider.otherwise('/auth');
 
   $routeProvider
     .when('/payment', {
@@ -19,5 +19,8 @@ ff.config(function($routeProvider, $httpProvider, $urlRouterProvider) {
     .when('/auth', {
       templateUrl: 'app/auth/auth.html',
       controller: 'authController'
+    })
+    .otherwise({
+      redirectTo: '/auth'
     });
 });

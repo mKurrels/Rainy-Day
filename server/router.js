@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var reqHandlers = require('./request_handlers');
+var authHandler = require('./authHandler');
 
 var passport = require('passport');
 
@@ -21,12 +22,14 @@ router.route('/groups')
   .post(reqHandlers.postGroup);
 
 
-router.route('/users/:id')
-  .get(reqHandlers.getUserInfoByID);
+router.route('/users/:code')
+  .get(reqHandlers.getUserInfoByCode);
 
 router.route('/loans')
   .get(reqHandlers.getLoans)
   .post(reqHandlers.newLoan);
+
+router.get('/oauth_return', authHandler.getTokenFromCode);
 
 // router.get('/auth/dwolla',
 //   passport.authenticate('dwolla', { scope: 'AccountInfoFull' }),

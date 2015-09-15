@@ -24,7 +24,7 @@ var options = {
   cert: process.env.certpem || fs.readFileSync(__dirname + '/../cert.pem')
 };
 
-console.log('**********************************', options);
+// console.log('**********************************', options);
 
 var port = process.env.PORT || 8443;
 

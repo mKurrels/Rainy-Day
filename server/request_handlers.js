@@ -349,9 +349,9 @@ var getAllUserInfoByID = function (user_id, cb, errCb) {
     });
 };
 
-exports.getUserInfoByID = function (req, res) {
+exports.getUserInfoByCode = function (req, res) {
 
-  getAllUserInfoByID(req.params.id, respond, error);
+  getAllUserInfoByID(req.params.code, respond, error);
   
   function respond(balance, user) {
     res.json({error: false, user: user, groupBalance: balance});

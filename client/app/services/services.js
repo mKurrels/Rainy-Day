@@ -55,31 +55,46 @@ angular.module('ff.services', [])
     requestLoan: requestLoan
   };
 })
+// .factory('Authentication', function ($http, $httpProvider) {
+  
+//   $httpProvider.interceptors.push(function($q, $location) {
+//     return { response: function(response) { 
+//       return response; 
+//     }, 
+//     responseError: function(response) { 
+//       if (response.status === 401) {
+//         $location.url('/login'); 
+//       }
+//       return $q.reject(response); 
+//     } 
+//   };
+// })
 
-.factory('userInfo', function ($http) {
+
+.factory('userInfo', function ($http, $location, $rootScope) {
   //hardcoded for now
   //TODO get Dwolla
   var info;
-  var user_id = 1;
-  var getUserInfo = function (cb) {
-    if(info) {
-      cb(info);
+  // var user_id = 1;
+  var getToken = function () {
+    if($rootScope.token) {
+      // $rootScope.token;
     } else {
       $http({
         method: 'GET',
-        url: '/api/users/' + user_id
+        url: '/api/oauth_return?code=' + $location.search().code
       })
       .then(function (resp) {
         console.log('yeppers');
         console.log(resp.data);
         cb(resp.data);
-        info = resp.data;
+        $rootScope.token = resp.data;
       });
     }
   };
 
   return {
     // info: info,
-    getUserInfo: getUserInfo
+    getToken: getToken
   };
 });

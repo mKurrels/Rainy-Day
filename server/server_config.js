@@ -31,14 +31,15 @@ passport.use(new DwollaStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
-    process.nextTick(function () {
+    console.log('here I AM !!!!!!!!!!!!!!!!!!!*****************');
+    // process.nextTick(function () {
       
-      // To keep the example simple, the user's Dwolla profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the Dwolla account with a user record in your database,
-      // and return that user instead.
-      return done(null, profile);
-    });
+    //   // To keep the example simple, the user's Dwolla profile is returned to
+    //   // represent the logged-in user.  In a typical application, you would want
+    //   // to associate the Dwolla account with a user record in your database,
+    //   // and return that user instead.
+    //   return done(null, profile);
+    // });
   }
 ));
 

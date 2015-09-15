@@ -1,14 +1,168 @@
+
 <div id='payment'>
-  <h1>Payment</h1>
-  <p>{{value}}</p>
-  <form name="paymentForm" ng-submit='pay(amount)'>
-    <input type='number' ng-model='amount', placeholder="amount">
-    <button>pay {{bob}}</button>
-  </form>
-  <form name="loanForm" ng-submit='getLoan(loanAmount, duration)'>
-    <input type='number' ng-model='loanAmount' placeholder="amount">
-    <input type='number' ng-model='duration' placeholder="duration (in months)">
-    <button>get loan</button>
-  </form>
-  <!-- <a href="#/signin">Already have an account? <strong>Signin</strong> ...</a> -->
+  <div class="valign-wrapper"></div>
+    <h2 class="header center orange-text">Account Center</h2>
+    
+    
+    <!-- <h5 class="header center"> My Balance: <span class='yourBalance'>{{yourBalance}}</span> Group's total: <span class='groupTotal'>{{groupTotal}}</span> Group's available: <span class='groupAvailable'>{{groupAvailable}}</span></h5>   -->
+
+    <div class="row">
+      <div class="col s12 m6 offset-m3 l4 offset-l4">
+        <div class="card-panel light-blue lighten-1">
+          <table>
+            <thead>
+              <tr>
+                <td align="center" class='white-text'>My Balance</td>
+                <td align="center" class='white-text'>Family's total</td>
+                <td align="center" class='white-text'>Family's available</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="center" class='white-text'>{{yourBalance}}</td>
+                <td align="center" class='white-text'>{{groupTotal}}</td>
+                <td align="center" class='white-text'>{{groupAvailable}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container row " ng-show="!(loading) && yourBalance >= 0"> 
+      <div class="input-field col s12 m4 offset-m4">
+        <select>
+          <option value="" disabled selected>I want to ...</option>
+          <option class="deposit" value="1">Deposit Money</option>
+          <option class="withdraw" value="2">Withdraw Money</option>
+          <option class="loan" value="3">Get a Loan</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="container row" ng-if="!(loading) && withdraw"> 
+      <form class="col s12" ng-submit="bob('3')">
+        <div class="input-field col s12 m4 offset-m4">
+          <input type="number" class="validate" min="0" max="{{canWithdraw}}" ng-model="withdraws">
+          <label for="number" data-error="maximum withdraw: {{canWithdraw}}" data-success="valid">Withdraw Amount {{withdraw}}</label>
+        </div>
+      </form>
+    </div>
+
+    <form class="col s12" ng-submit="bob('2')" ng-if="!(loading) && deposit">
+      <div class="container row"> 
+        <div class="input-field col s12 m4 offset-m4">
+          <input type="number" class="validate" min="0" ng-model="deposit">
+          <label>Deposit Amount</label>
+        </div>
+      </div>
+    </form>
+
+
+
+
+    <div class="container row" ng-if="!(loading) && loan"> 
+      <form class="col s12" ng-submit="getLoan(principle, duration)" >
+        <div class="input-field col s6 m4 offset-m2">
+          <input type="number" class="validate" min="0" max="{{groupAvailable}}" ng-model="principle">
+          <label data-error="maximum principle: {{groupAvailable}}">loan principle</label>
+        </div>
+        <div class="input-field col s6 m4" ng-show="loan">
+          <input type="number" class="validate" min="0" ng-model="duration">
+          <label>duration (months)</label>
+        </div>
+        <button class="input-field btn orange waves-effect waves-light" type="submit" name="action" ng-show="false">Submit
+        </button>
+      </form>
+    </div>
+
+
+    <form class="col s12" ng-submit="bob('1')" ng-if="!(loading) && yourBalance < 0">
+      <div class="container row"> 
+        <div class="input-field col s12 m4 offset-m4">
+          <input type="number" class="validate" min="0" ng-model="payment">
+          <label>Minimum payment: ({{minMonthly}})</label>
+        </div>
+      </div>
+    </form>
+
+
+    <!-- loading -->
+    <div class="waiting col s12 m4 center">
+      
+      <div class="preloader-wrapper big active center" ng-if="loading">
+        <div class="spinner-layer spinner-blue">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-red">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-yellow">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-green">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class"success" ng-if="done">
+      <h4>
+        <i class="material-icons">done</i>
+      </h4>
+      <h3>
+        {{message}}
+      </h3>  
+    </div>
+
+    <!-- <div class='table'>
+      <table class='centered light-blue lighten-1'>
+        <thead>
+          <tr>
+            <th class="light">My Balance</th>
+            <th>Family's total Balance</th>
+            <th>Family's available</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{{yourBalance}}</th>
+            <th>{{groupTotal}}</th>
+            <th>{{groupAvailable}}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div> -->
+
+
 </div>

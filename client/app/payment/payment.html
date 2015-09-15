@@ -69,8 +69,8 @@
           <label data-error="maximum principle: {{groupAvailable}}">loan principle</label>
         </div>
         <div class="input-field col s6 m4" ng-show="loan">
-          <input type="number" class="validate" min="0" ng-model="duration">
-          <label>duration (months)</label>
+          <input type="number" class="validate" min="1"  max="360" ng-model="duration">
+          <label data-error="must be between 1 and 360 months">duration (months)</label>
         </div>
         <button class="input-field btn orange waves-effect waves-light" type="submit" name="action" ng-show="false">Submit
         </button>

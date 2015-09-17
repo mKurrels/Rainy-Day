@@ -18,12 +18,38 @@ angular.module('ff.services', [])
 //   // };
 // })
 
-.factory('makePayment', function ($http) {
+.factory('changeBalance', function ($http) {
   
-  var pay = function (amount) {
+  var pay = function (amount, cb) {
     return $http({
       method: 'POST',
-      url: 'api/transactions',
+      url: 'api/payment',
+      data: {user_id: 1, value: amount}
+    })
+    .then(function (res) {
+      console.log(resp.data);
+      return resp.data;
+    }, function (res) {
+      //TODO  
+    });
+  };
+
+  var deposit = function (amount) {
+    return $http({
+      method: 'POST',
+      url: 'api/deposit',
+      data: {user_id: 1, value: amount}
+    })
+    .then(function (resp) {
+      console.log(resp.data);
+      return resp.data;
+    });
+  };
+
+var withdraw = function (amount) {
+    return $http({
+      method: 'POST',
+      url: 'api/withdraw',
       data: {user_id: 1, value: amount}
     })
     .then(function (resp) {
@@ -33,7 +59,8 @@ angular.module('ff.services', [])
   };
 
   return {
-    pay: pay
+    pay: pay,
+    withdraw: withdraw
   };
 })
 
@@ -82,7 +109,7 @@ angular.module('ff.services', [])
     } else {
       $http({
         method: 'GET',
-        url: '/api/oauth_return?code=' + $location.search().code
+        url: '/api/oauth_return2?code=' + $location.search().code
       })
       .then(function (resp) {
         console.log('yeppers');

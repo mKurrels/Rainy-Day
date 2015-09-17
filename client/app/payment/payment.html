@@ -8,8 +8,8 @@
 
     <div class="row">
       <div class="col s12 m6 offset-m3 l4 offset-l4">
-        <div class="card-panel light-blue lighten-1">
-          <table>
+        <div >
+          <table class="light-blue lighten-1">
             <thead>
               <tr>
                 <td align="center" class='white-text'>My Balance</td>
@@ -18,10 +18,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td align="center" class='white-text'>{{yourBalance}}</td>
-                <td align="center" class='white-text'>{{groupTotal}}</td>
-                <td align="center" class='white-text'>{{groupAvailable}}</td>
+              <tr class="white">
+                <td align="center" class='light-blue-text text-lighten-1'>{{yourBalance | currency}}</td>
+                <td align="center" class='light-blue-text text-lighten-1'>{{groupTotal | currency}}</td>
+                <td align="center" class='light-blue-text text-lighten-1'>{{groupAvailable | currency}}</td>
               </tr>
             </tbody>
           </table>
@@ -42,9 +42,9 @@
     </div>
 
     <div class="container row" ng-if="!(loading) && withdraw"> 
-      <form class="col s12" ng-submit="bob('3')">
+      <form class="col s12" ng-submit="makeWithdraw(withdraw)">
         <div class="input-field col s12 m4 offset-m4">
-          <input type="number" class="validate" min="0" max="{{canWithdraw}}" ng-model="withdraws">
+          <input type="number" class="validate" min="0" max="{{canWithdraw}}" ng-model="withdraw">
           <label for="number" data-error="maximum withdraw: {{canWithdraw}}" data-success="valid">Withdraw Amount {{withdraw}}</label>
         </div>
       </form>

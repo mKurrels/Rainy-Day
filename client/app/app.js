@@ -3,7 +3,8 @@ var ff = angular.module('ff', [
   'ff.payment',
   'ff.services',
   'ngRoute',
-  'ui.router'
+  'ui.router',
+  'ngCookies'
 ]);
 
 ff.config(function($routeProvider, $httpProvider, $urlRouterProvider) {

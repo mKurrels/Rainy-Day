@@ -25,3 +25,17 @@ exports.getTokenFromCode = function(req, res) {
 
 
 };
+
+
+// exports.auth = function(req, res, next){ 
+//   if (!req.isAuthenticated()) {
+//     res.send(401); 
+//   } else {
+//     next(); 
+//   }
+// };
+
+
+
+
+

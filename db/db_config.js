@@ -1,41 +1,33 @@
-// var Promise  = require('bluebird');
 
-var url = process.env.DATABASE_URL || require('../api').url;
-var config = {
-  client: 'pg',
-  connection: url + "?ssl=true"
-};
 
-// var config = {
-//   client: 'sqlite3',
-//   connection: {
-//     filename: __dirname + "/ff.sqlite"
-//   }
-// };
+if (process.env.DATABASE_URL) {
+  var url = process.env.DATABASE_URL || require('../api').url;
+  var config = {
+    client: 'pg',
+    connection: url + "?ssl=true"
+  }; 
+} else {
+  var config = {
+    client: 'sqlite3',
+    connection: {
+      filename: __dirname + "/ff.sqlite"
+    }
+  }; 
+}
 
-// if (process.env.DATABASE_URL) {
-  // config.client = 'pg';
-  // config.connection = {
-  //   host: process.env.DATABASE_HOST,
-  //   user: process.env.DATABASE_USER,
-  //   password: process.env.DATABASE_PW,
-  //   database: process.env.DATABASE,
-  //   // ssl: true,
-  //   charset: 'utf8'
-  // };
-// }
 
 var knex = require('knex')(config);
 
-db = /*Promise.promisifyAll*/(require('bookshelf')(knex));
+db = (require('bookshelf')(knex));
 
 db.knex.schema.hasTable('users').then(function(exists) {
   if (!exists) {
     console.log('nope, doesnt exist');
     return knex.schema.createTable('users', function(t) {
-      t.increments('id').primary();
-      t.integer('balance');
-      t.integer('group_id');
+      t.string('id').primary();
+      t.decimal('balance');
+      t.string('group_id');
+      t.string('token');
       t.timestamps();
       t.integer('loan_id').references('id').inTable('loans');
     });
@@ -51,7 +43,7 @@ db.knex.schema.hasTable('transactions').then(function(exists) {
       t.decimal('value');
       t.string('type');
       t.timestamps();
-      t.integer('user_id').references('id').inTable('users');
+      t.string('user_id').references('id').inTable('users');
       t.integer('loan_id').references('id').inTable('loans');
     })
     .then(function(transactions){
@@ -72,7 +64,7 @@ db.knex.schema.hasTable('loans').then(function(exists) {
       t.integer('duration');
       t.string('status');
       t.timestamps();
-      t.integer('user_id').references('id').inTable('users');
+      t.string('user_id').references('id').inTable('users');
     })
     .then(function(loans){
       console.log('Create Table loans');
@@ -85,7 +77,7 @@ db.knex.schema.hasTable('loans').then(function(exists) {
 db.knex.schema.hasTable('groups').then(function(exists) {
   if (!exists) {
     return knex.schema.createTable('groups', function(t) {
-      t.increments('id').primary();
+      t.string('id').primary();
       t.decimal('balance');
       t.decimal('available_balance');
       t.timestamps();
@@ -99,5 +91,4 @@ db.knex.schema.hasTable('groups').then(function(exists) {
 });
 
 
-//hi
 exports.db = db;

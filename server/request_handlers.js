@@ -10,10 +10,11 @@ helpers  *************************************
 
 var postX = function (req, res, model) {
   x = req.body;
-  console.log('x', x);
-  model.forge(x).save()
-    .then(function (x) {
-      res.json({x: x});
+  console.log('xxxxxxx', x);
+  new model().save(x)
+    .then(function (y) {
+      console.log('y', y);
+      res.json({error: false, data: y});
     })
     .catch(function (err) {
       res.status(500).json({error: true, data: {message: err.message}});
@@ -36,7 +37,7 @@ Groups  *************************************
 ********************************************/
 
 exports.postGroup = function (req, res) {
-
+  console.log('posting to group')
   postX(req, res, Group);
 };
 

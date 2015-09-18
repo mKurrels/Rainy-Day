@@ -4,6 +4,7 @@ var DwollaStrategy = require('passport-dwolla').Strategy;
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var morgan = require('morgan');
+var User = require('../db/models').User;
 
 var api = require('./router');
 var authRouter = require('./authRouter');
@@ -12,11 +13,13 @@ var DWOLLA_KEY = process.env.KEY || require('../api').key;
 var DWOLLA_SECRET = process.env.SECRET || require('../api').secret;
 
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
+passport.serializeUser(function(user_id, done) {
+  console.log('serializeUser', user_id);
+  done(null, user_id);
 });
 
 passport.deserializeUser(function(obj, done) {
+  console.log('deserializeUser', obj);
   done(null, obj);
 });
 
@@ -28,13 +31,31 @@ passport.use(new DwollaStrategy({
     sandbox: true
   },
   function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
+    
     process.nextTick(function () {
-      console.log('profile', profile, 'json', JSON.stringify(profile));
-      // getUserInfo
 
+      new User({id: profile._json.Response.Id})
+        .fetch({withRelated: ['group', 'loan', 'transactions']})
+        .then(function(user) {
 
-      return done(null, profile);
+          if (!user) {
+            //just giving a group_id of 1 for now, while I figure out how to do groups
+            return new User()
+            .save({id: profile._json.Response.Id, group_id: '1', token: accessToken});
+          } else {
+            user.set({token: accessToken});
+            return user;
+          }
+        })
+        .then(function (user) {
+          // console.log(user);
+          return done(null, profile._json.Response.Id);
+        })
+        .catch(function (err){
+          console.log("my error message", err.message);
+          return done(err);
+        });
+
     });
   }
 ));
@@ -42,11 +63,11 @@ passport.use(new DwollaStrategy({
 var app = express();
 
 app.use(morgan('dev'));
+app.use(express.static(__dirname + '/../client'));
 app.use(bodyParser.json());
 app.use(session({ secret: DWOLLA_SECRET, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(__dirname + '/../client'));
 app.use('/api', api);
 app.use('/auth', authRouter);
 
@@ -57,38 +78,3 @@ module.exports = app;
 
 
 
-function getUserInfo(user_id) {
-  var userBalance;
-  var groupTotal;
-  var groupAvailable;
-  return new User({id: user_id}).fetch({withRelated: ['group']})
-    .then(function(user) {
-      if (!user) {
-        //just giving a group_id of 1 for now, while I figure out how to do groups
-        new User({id: user_id, group_id: '1'}).save();
-        return new Group({id: '1'}).fetch()
-          .then(function(group) {
-            console.log('group', group);
-            groupTotal = group.get('balance');
-            groupAvailable = group.get('available_balance');
-            return ({userBalance: 0,
-                     groupTotal: groupTotal,
-                     groupAvailable: groupAvailable
-                    });
-          });
-      
-      } else {
-        userBalance = user.get('balance');
-        groupTotal = user.related('group').get('balance');
-        groupAvailable = user.relate('group').get('available_balance');
-        return ({userBalance: userBalance,
-                 groupTotal: groupTotal,
-                 groupAvailable: groupAvailable
-                });
-      }
-    })
-    .catch(function (err){
-
-      console.log(err.message);
-    });
-}

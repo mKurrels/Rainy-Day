@@ -97,8 +97,8 @@ var addTransaction = function (user_id, value, type) {
 };
 
 exports.deposit = function (req, res) {
-  console.log('got here');
-  var user_id = req.body.user_id;
+  console.log('got here ==================', req.body, 'req.user', req.user);
+  var user_id = req.user;
   var amount = req.body.amount;
   var group_id;
   changeUserBalance(user_id, amount)

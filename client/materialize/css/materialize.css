@@ -8167,4 +8167,8 @@ td {
   text-align: center;
 }
 
-
+.isa_success {
+    color: #ff9800;
+    background-color: #fff3e0;
+    text-align: center;
+}

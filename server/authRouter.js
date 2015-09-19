@@ -10,6 +10,7 @@ var DWOLLA_KEY = process.env.KEY || require(__dirname + '/../api').key;
 var DWOLLA_SECRET = process.env.SECRET || require(__dirname + '/../api').secret;
 var Dwolla = require('dwolla-node')(DWOLLA_KEY, DWOLLA_SECRET);
 var passport = require('passport');
+var sendUserInfo = require('./utils').sendUserInfo;
 
 
 
@@ -24,16 +25,8 @@ router.get('/dwolla',
 
 router.get('/dwolla/callback', 
   passport.authenticate('dwolla', { failureRedirect: '/#/auth' }),
-  function(req, res) {
-    console.log('req.user', req.user, 'req.id', req.id);
-    var user_id = req.user;
-    getUserInfo(user_id)
-      .then(function (data) {
-        res.cookie('userBalance', data.userBalance);
-        res.cookie('groupTotal', data.groupTotal);
-        res.cookie('groupAvailable', data.groupAvailable);
-        res.redirect('/#/payment');
-      });
+  function (req, res) {
+    res.redirect('/#/payment');
   });
 
 router.get('/logout', function(req, res){
@@ -62,31 +55,6 @@ router.get('/logout', function(req, res){
 
 
 
-
-function getUserInfo(user_id) {
-  var userBalance;
-  var groupTotal;
-  var groupAvailable;
-  
-  //just have one group for now
-  return new User({id: user_id}).fetch()
-    .then(function (user) {
-      userBalance = user.get('balance');
-      return new Group({id: '1'}).fetch();
-    })
-    .then(function(group) {
-      console.log('group', group);
-      groupTotal = group.get('balance');
-      groupAvailable = group.get('available_balance');
-      return ({userBalance: userBalance,
-               groupTotal: groupTotal,
-               groupAvailable: groupAvailable
-              });
-    })
-    .catch(function (err){
-      console.log("oops! error", err.message);
-    });
-}
 
 
 module.exports = router;

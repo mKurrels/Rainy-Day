@@ -45,16 +45,16 @@
       <form class="col s12" ng-submit="makeWithdraw(withdraw)">
         <div class="input-field col s12 m4 offset-m4">
           <input type="number" class="validate" min="0" max="{{canWithdraw}}" ng-model="withdraw">
-          <label for="number" data-error="maximum withdraw: {{canWithdraw}}" data-success="valid">Withdraw Amount {{withdraw}}</label>
+          <label data-error="maximum withdraw: {{canWithdraw}}" data-success="valid">Withdraw Amount {{withdraw}}</label>
         </div>
       </form>
     </div>
 
-    <form class="col s12" ng-submit="bob('2')" ng-if="!(loading) && deposit">
+    <form class="col s12" ng-submit="makeDeposit(depositAmount)" ng-if="!(loading) && deposit">
       <div class="container row"> 
         <div class="input-field col s12 m4 offset-m4">
-          <input type="number" class="validate" min="0" ng-model="deposit">
-          <label>Deposit Amount</label>
+          <input type="number" class="validate" min="1" ng-model="depositAmount">
+          <label data-error="minimum deposit: 1">Deposit Amount</label>
         </div>
       </div>
     </form>
@@ -145,24 +145,12 @@
       </h3>  
     </div>
 
-    <!-- <div class='table'>
-      <table class='centered light-blue lighten-1'>
-        <thead>
-          <tr>
-            <th class="light">My Balance</th>
-            <th>Family's total Balance</th>
-            <th>Family's available</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>{{yourBalance}}</th>
-            <th>{{groupTotal}}</th>
-            <th>{{groupAvailable}}</th>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
+    <div class="row">
+      <div class="isa_success col s12 m6 offset-m3 l4 offset-l4" ng-if="isDone">
+        <i class="material-icons">done</i>
+        {{successMessage}}
+      </div>
+    </div>
 
 
 </div>

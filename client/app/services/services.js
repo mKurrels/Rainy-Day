@@ -1,24 +1,6 @@
 angular.module('ff.services', [])
 
-// .factory('authorize', function ($http, $location) {
-  
-//   // var getRedirect = function (amount) {
-//   //   return $http({
-//   //     method: 'GET',
-//   //     url: 'api/auth',
-//   //   })
-//   //   .then(function (resp) {
-//   //     $location.path(resp.data);
-//   //     console.log(resp.data);
-//   //   });
-//   // };
-
-//   // return {
-//   //   getRedirect: getRedirect
-//   // };
-// })
-
-.factory('changeBalance', function ($http) {
+.factory('changeBalance', function ($http, $location) {
   
   var pay = function (amount, cb) {
     return $http({
@@ -27,38 +9,48 @@ angular.module('ff.services', [])
       data: {user_id: 1, value: amount}
     })
     .then(function (res) {
-      console.log(resp.data);
-      return resp.data;
+      console.log(res.data);
+      return res.data;
     }, function (res) {
       //TODO  
     });
   };
 
-  var deposit = function (amount) {
+  var deposit = function (amount, cb) {
     return $http({
       method: 'POST',
       url: 'api/deposit',
-      data: {user_id: 1, value: amount}
+      data: {amount: amount}
     })
-    .then(function (resp) {
-      console.log(resp.data);
-      return resp.data;
+    .then(function (res) {
+      cb();
+      console.log(res.data);
+      return res.data;
+    }, function (res) {
+      console.log("=======================", res.status);
+      if (res.status === 403) {
+        $location.path('/auth');
+        alert('invalid request: please sign in');
+      } else {
+        cb(res.data);
+      }
     });
   };
 
-var withdraw = function (amount) {
+  var withdraw = function (amount) {
     return $http({
       method: 'POST',
       url: 'api/withdraw',
       data: {user_id: 1, value: amount}
     })
-    .then(function (resp) {
-      console.log(resp.data);
-      return resp.data;
+    .then(function (res) {
+      console.log(res.data);
+      return res.data;
     });
   };
 
   return {
+    deposit: deposit,
     pay: pay,
     withdraw: withdraw
   };
@@ -72,9 +64,9 @@ var withdraw = function (amount) {
       url: 'api/loans',
       data: {user_id: 1, principle: amount, duration: duration}
     })
-    .then(function (resp) {
-      console.log(resp.data);
-      return resp.data;
+    .then(function (res) {
+      console.log(res.data);
+      return res.data;
     });
   };
 
@@ -82,46 +74,31 @@ var withdraw = function (amount) {
     requestLoan: requestLoan
   };
 })
-// .factory('Authentication', function ($http, $httpProvider) {
-  
-//   $httpProvider.interceptors.push(function($q, $location) {
-//     return { response: function(response) { 
-//       return response; 
-//     }, 
-//     responseError: function(response) { 
-//       if (response.status === 401) {
-//         $location.url('/login'); 
-//       }
-//       return $q.reject(response); 
-//     } 
-//   };
-// })
 
 
 .factory('userInfo', function ($http, $location, $rootScope) {
-  //hardcoded for now
-  //TODO get Dwolla
   var info;
-  // var user_id = 1;
-  var getToken = function () {
-    if($rootScope.token) {
-      // $rootScope.token;
-    } else {
-      $http({
-        method: 'GET',
-        url: '/api/oauth_return2?code=' + $location.search().code
-      })
-      .then(function (resp) {
-        console.log('yeppers');
-        console.log(resp.data);
-        cb(resp.data);
-        $rootScope.token = resp.data;
-      });
-    }
+  var getInfo = function (cb) {
+    $http({
+      method: 'GET',
+      url: '/api/user'
+    })
+    .then(function (res) {
+      console.log('yeppers', 'res', res);
+      $rootScope.data = res.data;
+      cb();
+    }, function (res) {
+      console.log("=======================", res.status);
+      if (res.status === 403) {
+        $location.path('/auth');
+        alert('invalid request: please sign in');
+      } else {
+        cb(res.data);
+      }
+    });
   };
 
   return {
-    // info: info,
-    getToken: getToken
+    getInfo: getInfo
   };
 });

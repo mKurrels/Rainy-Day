@@ -2,63 +2,73 @@ var payment = angular.module('ff.payment', []);
 
 payment.controller('paymentController', function ($cookies, $location, $scope, changeBalance, userInfo, loan, $rootScope) {
 
-  console.log($cookies.get('userBalance'));
+  userInfo.getInfo(setUp);
 
-  // $scope.minMonthly = 10;
-  $scope.groupTotal = $cookies.get('groupTotal');
-  $scope.groupAvailable = $cookies.get('groupAvailable');
-  $scope.yourBalance = $cookies.get('userBalance');
-  $scope.canWithdraw = Math.min($scope.yourBalance, $scope.groupAvailable);
-  $scope.loading = false;
-  $scope.done = false;
+  function setUp (err) {
+    if (err) {
+      //todo
+    } else {
+      var data = $rootScope.data;
+      $scope.groupTotal = data.groupTotal;
+      $scope.groupAvailable = data.groupAvailable;
+      $scope.yourBalance = data.userBalance;
+      updateLocalStorage();
+
+      $scope.canWithdraw = Math.min($scope.yourBalance, $scope.groupAvailable);
+      $scope.isLoading = false;
+      $scope.isDone = false;
+    }
+  };
 
   
 
   $scope.pay = function(amount) {
     $scope.yourBalance += amount;
     changeBalance.pay($scope.amount, function (err, toTotal, toAvailable) {
-        $scope.loading = true;
+        $scope.isLoading = true;
         if(err) {
-          displayError('err');
+          displayError(err);
         } else {
           $scope.yourBalance += amount;
           $scope.groupTotal += toTotal;
           $scope.groupAvailable += toAvailable;
-          $scope.loading = false;
-          $scope.done = true;
+          $scope.isLoading = false;
+          $scope.isDone = true;
         }
       }); 
-    $scope.loading = true;
+    $scope.isLoading = true;
   };
 
-  $scope.deposit = function(amount) {
-    $scope.yourBalance += amount;
-    changeBalance.deposit($scope.amount, function (err) {
-        $scope.loading = true;
+  $scope.makeDeposit = function(amount) {
+    $scope.isLoading = true;
+    changeBalance.deposit(amount, function (err) {
+        console.log('in callback');
         if(err) {
-          displayError('err');
+          displayError(err);
         } else {
-          $scope.yourBalance += amount;
-          $scope.groupTotal += amount;
-          $scope.groupAvailable += amount;
-          $scope.loading = false;
-          $scope.done = true;
+          $scope.yourBalance = $scope.yourBalance*1 + amount*1;
+          $scope.groupTotal = $scope.groupTotal*1 + amount*1;
+          $scope.groupAvailable = $scope.groupAvailable*1 + amount*1;
+          reset();
+          $scope.successMessage = "your deposit has been processed!";
+          $scope.isDone = true;
         }
       }); 
-    $scope.loading = true;
+    $scope.isLoading = false;
   };
+
 
   $scope.makeWithdraw = function (amount) {
     if (canWithdraw >= amount) {
       changeBalance.withdraw(amount, function (err) {
-        $scope.loading = true;
+        $scope.isLoading = true;
         if(err) {
-          displayError('err');
+          displayError(err);
         } else {
-          $scope.done = true;
+          $scope.isDone = true;
           $scope.yourBalance -= amount;
           $scope.groupAvailable -=amount;
-          $scope.loading = false;
+          $scope.isLoading = false;
         }
       }); 
     } else {
@@ -69,25 +79,26 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
   $scope.getLoan = function (amount, duration) {
     if (amount <= $scope.groupTotal) {
       loan.requestLoan (amount, duration, function (err) {
-        $scope.loading = true;
+        $scope.isLoading = true;
         if(err) {
-          displayError('err');
+          displayError(err);
         } else {
-          $scope.done = true;
+          $scope.isDone = true;
           $scope.yourBalance -= amount;
           $scope.groupAvailable -=amount;
-          $scope.loading = false;
+          $scope.isLoading = false;
         }
       });
       
     }
     console.log(amount, duration);
-    $scope.loading = true;
+    $scope.isLoading = true;
   };
 
   var displayError = function (message) {
     //TODO
-  }
+    alert("sorry, transaction did not go through: " + message);
+  };
 
   $scope.bob = function (thing) {
     console.log(thing);
@@ -97,11 +108,23 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
     $scope.deposit = false;
     $scope.withdraw = false;
     $scope.loan = false;
-    $scope.done = false;
+    $scope.isDone = false;
 
     $scope[form] = true;
   }
 
+  function reset() {
+    $scope.isLoading = false;
+    $scope.deposit = false;
+    console.log('reset called');
+    updateLocalStorage();
+  }
+
+  function updateLocalStorage () {
+    localStorage.setItem("userData",  { groupTotal: $scope.groupTotal,
+                                  groupAvailable: $scope.groupAvailable,
+                                  yourBalance: $scope.yourBalance });                              
+  }
 
   $('select').material_select();
 

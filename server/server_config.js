@@ -31,32 +31,28 @@ passport.use(new DwollaStrategy({
     sandbox: true
   },
   function(accessToken, refreshToken, profile, done) {
-    
-    process.nextTick(function () {
+    console.log('profile', profile, 'accessToken', accessToken);
+    new User({id: profile._json.Response.Id})
+      .fetch({withRelated: ['group', 'loan', 'transactions']})
+      .then(function(user) {
 
-      new User({id: profile._json.Response.Id})
-        .fetch({withRelated: ['group', 'loan', 'transactions']})
-        .then(function(user) {
-
-          if (!user) {
-            //just giving a group_id of 1 for now, while I figure out how to do groups
-            return new User()
-            .save({id: profile._json.Response.Id, group_id: '1', token: accessToken});
-          } else {
-            user.set({token: accessToken});
-            return user;
-          }
-        })
-        .then(function (user) {
-          // console.log(user);
-          return done(null, profile._json.Response.Id);
-        })
-        .catch(function (err){
-          console.log("my error message", err.message);
-          return done(err);
-        });
-
-    });
+        if (!user) {
+          //just giving a group_id of 1 for now, while I figure out how to do groups
+          return new User()
+          .save({id: profile._json.Response.Id, group_id: '1', token: accessToken});
+        } else {
+          user.save({token: accessToken});
+          return user;
+        }
+      })
+      .then(function (user) {
+        // console.log(user);
+        return done(null, profile._json.Response.Id);
+      })
+      .catch(function (err){
+        console.log("my error message", err.message);
+        return done(err);
+      });
   }
 ));
 

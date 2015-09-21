@@ -3,6 +3,12 @@ var User = require('../db/models').User;
 var Transaction = require('../db/models').Transaction;
 var Loan = require('../db/models').Loan;
 
+var DWOLLA_KEY = process.env.KEY || require('../api').key;
+var DWOLLA_SECRET = process.env.SECRET || require('../api').secret;
+var Dwolla = require('dwolla-node')(DWOLLA_KEY, DWOLLA_SECRET);
+        
+
+
 /*******************************************
 helpers  *************************************
 ********************************************/
@@ -37,7 +43,7 @@ Groups  *************************************
 ********************************************/
 
 exports.postGroup = function (req, res) {
-  console.log('posting to group')
+  console.log('posting to group');
   postX(req, res, Group);
 };
 
@@ -97,16 +103,29 @@ var addTransaction = function (user_id, value, type) {
 };
 
 exports.deposit = function (req, res) {
-  console.log('got here ==================', req.body, 'req.user', req.user);
+  console.log('got here ==================', 'req.user', req.user);
   var user_id = req.user;
   var amount = req.body.amount;
+  var pin = req.body.pin;
   var group_id;
+  var token;
   changeUserBalance(user_id, amount)
     .then(function (user) {
-      console.log('1 got here');
-      group_id = user.get('group_id');
-      changeGroupBalance(group_id, amount, amount);
-      return addTransaction(user_id, amount, "DEPOSIT");
+      token = user.get('token');
+      console.log('z tokenz', token, 'pin', pin);
+      Dwolla.setToken(token);
+      Dwolla.sandbox = true;
+      Dwolla.send(pin, 'michaelKurrels@gmail.com', amount, {destinationType: 'Email', notes: 'Thanks for the coffee!'}, function(err, data) {
+        if (err) { 
+          console.log('send error===============', err); 
+          throw new Error('dwolla send didnt work!'); 
+        }
+        console.log('success data', data);
+        console.log('1 got here');
+        group_id = user.get('group_id');
+        changeGroupBalance(group_id, amount, amount);
+        return addTransaction(user_id, amount, "DEPOSIT");
+      });
     })
     .then(function (transaction) {
       console.log('3 got here');

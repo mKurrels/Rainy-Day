@@ -50,12 +50,18 @@
       </form>
     </div>
 
-    <form class="col s12" ng-submit="makeDeposit(depositAmount)" ng-if="!(loading) && deposit">
+    <form class="col s12" ng-submit="makeDeposit(depositAmount, pin)" ng-if="!(loading) && deposit">
       <div class="container row"> 
         <div class="input-field col s12 m4 offset-m4">
           <input type="number" class="validate" min="1" ng-model="depositAmount">
           <label data-error="minimum deposit: 1">Deposit Amount</label>
         </div>
+        <div class="input-field col s12 m4 offset-m4">
+          <input type="password" class="validate" pattern="[0-9]{4}" ng-model="pin">
+          <label data-error="pin must be 4 digits">4 Digit Dwolla Pin</label>
+        </div>
+        <button type="submit" ng-show="false">Submit
+        </button>
       </div>
     </form>
 
@@ -72,7 +78,7 @@
           <input type="number" class="validate" min="1"  max="360" ng-model="duration">
           <label data-error="must be between 1 and 360 months">duration (months)</label>
         </div>
-        <button class="input-field btn orange waves-effect waves-light" type="submit" name="action" ng-show="false">Submit
+        <button type="submit" ng-show="false">Submit
         </button>
       </form>
     </div>
@@ -86,7 +92,6 @@
         </div>
       </div>
     </form>
-
 
     <!-- loading -->
     <div class="waiting col s12 m4 center">

@@ -15,7 +15,7 @@ var sendUserInfo = require('./utils').sendUserInfo;
 
 
 router.get('/dwolla',
-  passport.authenticate('dwolla', { scope: 'AccountInfoFull' }),
+  passport.authenticate('dwolla', { scope: 'AccountInfoFull|Send|Request' }),
   function(req, res){
     // The request will be redirected to Dwolla for authentication, so this
     // function will not be called.

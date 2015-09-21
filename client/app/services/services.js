@@ -16,11 +16,11 @@ angular.module('ff.services', [])
     });
   };
 
-  var deposit = function (amount, cb) {
+  var deposit = function (amount, pin, cb) {
     return $http({
       method: 'POST',
       url: 'api/deposit',
-      data: {amount: amount}
+      data: {amount: amount, pin: pin}
     })
     .then(function (res) {
       cb();

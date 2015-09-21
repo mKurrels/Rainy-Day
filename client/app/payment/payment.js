@@ -18,7 +18,7 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
       $scope.isLoading = false;
       $scope.isDone = false;
     }
-  };
+  }
 
   
 
@@ -39,9 +39,9 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
     $scope.isLoading = true;
   };
 
-  $scope.makeDeposit = function(amount) {
+  $scope.makeDeposit = function(amount, pin) {
     $scope.isLoading = true;
-    changeBalance.deposit(amount, function (err) {
+    changeBalance.deposit(amount, pin, function (err) {
         console.log('in callback');
         if(err) {
           displayError(err);
@@ -97,7 +97,7 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
 
   var displayError = function (message) {
     //TODO
-    alert("sorry, transaction did not go through: " + message);
+    console.log("sorry, transaction did not go through: ", message);
   };
 
   $scope.bob = function (thing) {

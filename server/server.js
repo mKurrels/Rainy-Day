@@ -8,12 +8,10 @@ var url = process.env.DATABASE_URL || require('../api').url;
 if (process.env.DATABASE_URL) {
   pg.connect(url + "?ssl=true", function(err, client) {
     if (err) throw err;
-    console.log('Connected to postgres! Getting schemas...');
 
     client
       .query('SELECT table_schema,table_name FROM information_schema.tables;')
       .on('row', function(row) {
-        // console.log(JSON.stringify(row));
       });
   });
 }
@@ -26,7 +24,6 @@ var options = {
   cert: process.env.certpem || fs.readFileSync(__dirname + '/../cert.pem')
 };
 
-// console.log('**********************************', options);
 
 var port = process.env.PORT || 8443;
 

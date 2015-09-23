@@ -3,13 +3,14 @@ angular.module('ff.services', [])
 .factory('changeBalance', function ($http, $location) {
   
   var pay = function (amount, cb) {
+
     return $http({
       method: 'POST',
       url: 'api/payment',
       data: {user_id: 1, value: amount}
     })
+
     .then(function (res) {
-      console.log(res.data);
       return res.data;
     }, function (res) {
       //TODO  
@@ -17,17 +18,17 @@ angular.module('ff.services', [])
   };
 
   var deposit = function (amount, pin, cb) {
+
     return $http({
       method: 'POST',
       url: 'api/deposit',
       data: {amount: amount, pin: pin}
     })
+
     .then(function (res) {
       cb();
-      console.log(res.data);
       return res.data;
     }, function (res) {
-      console.log("=======================", res.status);
       if (res.status === 403) {
         $location.path('/auth');
         alert('invalid request: please sign in');
@@ -43,14 +44,13 @@ angular.module('ff.services', [])
       url: 'api/withdraw',
       data: {amount: amount, pin: pin}
     })
+
     .then(function (res) {
-      console.log(res.data);
       cb();
       return res.data;
     }, function (res) {
-      console.log("=======================", res.status, res.data);
       if (res.status === 403) {
-        // $location.path('/auth');
+        $location.path('/auth');
         alert('invalid request: please sign in');
       } else {
         cb(res.data);
@@ -68,19 +68,19 @@ angular.module('ff.services', [])
 .factory('loan', function ($http) {
   
   var requestLoan = function (amount, duration, pin, cb) {
+
     return $http({
       method: 'POST',
       url: 'api/loans',
       data: {principle: amount, pin: pin, duration: duration}
     })
+
     .then(function (res) {
       cb();
-      console.log(res.data);
       return res.data;
     }, function (res) {
-      console.log("=======================", res.status, res.data);
       if (res.status === 403) {
-        // $location.path('/auth');
+        $location.path('/auth');
         alert('invalid request: please sign in');
       } else {
         cb(res.data);
@@ -95,21 +95,23 @@ angular.module('ff.services', [])
 
 
 .factory('userInfo', function ($http, $location, $rootScope) {
+
   var info;
+
   var getInfo = function (cb) {
+
     $http({
       method: 'GET',
       url: '/api/user'
     })
+    
     .then(function (res) {
-      console.log('yeppers', 'res', res);
       $rootScope.data = res.data;
       cb();
     }, function (res) {
-      console.log("=======================", res.status);
       if (res.status === 403) {
-        // $location.path('/auth');
-        // alert('invalid request: please sign in');
+        $location.path('/auth');
+        alert('invalid request: please sign in');
       } else {
         cb(res.data);
       }

@@ -9,9 +9,6 @@ var ff = angular.module('ff', [
 
 ff.config(function($routeProvider, $httpProvider, $urlRouterProvider) {
 
-  //this doesn't work for some reason:
-  // $urlRouterProvider.otherwise('/auth');
-
   $routeProvider
     .when('/payment', {
       templateUrl: 'app/payment/payment.html',

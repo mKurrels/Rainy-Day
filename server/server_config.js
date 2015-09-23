@@ -1,25 +1,23 @@
 var express = require('express');
 var passport = require('passport');
-var DwollaStrategy = require('passport-dwolla').Strategy;
+var DwollaStrategy = require('../vendor/passport-dwolla').Strategy;
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var morgan = require('morgan');
 var User = require('../db/models').User;
 
-var api = require('./router');
-var authRouter = require('./authRouter');
+var api = require('./routes/router');
+var authRouter = require('./routes/authRouter');
 
 var DWOLLA_KEY = process.env.KEY || require('../api').key;
 var DWOLLA_SECRET = process.env.SECRET || require('../api').secret;
 
 
 passport.serializeUser(function(user_id, done) {
-  console.log('serializeUser', user_id);
   done(null, user_id);
 });
 
 passport.deserializeUser(function(obj, done) {
-  console.log('deserializeUser', obj);
   done(null, obj);
 });
 
@@ -31,7 +29,6 @@ passport.use(new DwollaStrategy({
     sandbox: true
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log('profile', profile, 'accessToken', accessToken);
     new User({id: profile._json.Response.Id})
       .fetch({withRelated: ['group', 'loan', 'transactions']})
       .then(function(user) {
@@ -46,11 +43,9 @@ passport.use(new DwollaStrategy({
         }
       })
       .then(function (user) {
-        // console.log(user);
         return done(null, profile._json.Response.Id);
       })
       .catch(function (err){
-        console.log("my error message", err.message);
         return done(err);
       });
   }

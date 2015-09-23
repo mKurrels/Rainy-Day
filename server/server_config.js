@@ -59,11 +59,11 @@ passport.use(new DwollaStrategy({
 var app = express();
 
 app.use(morgan('dev'));
-app.use(express.static(__dirname + '/../client'));
 app.use(bodyParser.json());
 app.use(session({ secret: DWOLLA_SECRET, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(__dirname + '/../client'));
 app.use('/api', api);
 app.use('/auth', authRouter);
 

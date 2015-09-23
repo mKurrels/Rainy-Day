@@ -1,7 +1,7 @@
 
 <div id='payment'>
   <div class="valign-wrapper"></div>
-    <h2 class="header center orange-text">Account Center</h2>
+    <h2 class="header center orange-text">Fund Manager</h2>
     
     
     <!-- <h5 class="header center"> My Balance: <span class='yourBalance'>{{yourBalance}}</span> Group's total: <span class='groupTotal'>{{groupTotal}}</span> Group's available: <span class='groupAvailable'>{{groupAvailable}}</span></h5>   -->
@@ -12,14 +12,12 @@
           <table class="light-blue lighten-1">
             <thead>
               <tr>
-                <td align="center" class='white-text'>My Balance</td>
                 <td align="center" class='white-text'>Family's total</td>
                 <td align="center" class='white-text'>Family's available</td>
               </tr>
             </thead>
             <tbody>
               <tr class="white">
-                <td align="center" class='light-blue-text text-lighten-1'>{{yourBalance | currency}}</td>
                 <td align="center" class='light-blue-text text-lighten-1'>{{groupTotal | currency}}</td>
                 <td align="center" class='light-blue-text text-lighten-1'>{{groupAvailable | currency}}</td>
               </tr>
@@ -51,7 +49,7 @@
           <input type="password" class="validate" pattern="[0-9]{4}" ng-model="pin">
           <label data-error="pin must be 4 digits">4 Digit Dwolla Pin</label>
         </div>
-        <button type="submit" ng-show="false">Submit</button>
+        <button type="submit" ng-show="false">Submit
         </button>
       </div>
     </form>
@@ -67,7 +65,7 @@
           <input type="password" class="validate" pattern="[0-9]{4}" ng-model="pin">
           <label data-error="pin must be 4 digits">4 Digit Dwolla Pin</label>
         </div>
-        <button type="submit" ng-show="false">Submit</button>
+        <button type="submit" ng-show="false">Submit
         </button>
       </form>
     </div>
@@ -86,23 +84,18 @@
           <input type="number" class="validate" min="1"  max="360" ng-model="duration">
           <label data-error="must be between 1 and 360 months">duration (months)</label>
         </div>
-        <button type="submit" ng-show="false">Submit</button>
+        <button type="submit" ng-show="false">Submit
         </button>
       </form>
     </div>
 
 
-    <form class="col s12" ng-submit="pay(paymentAmount, pin)" ng-if="!(loading) && yourBalance < 0">
+    <form class="col s12" ng-submit="bob('1')" ng-if="!(loading) && yourBalance < 0">
       <div class="container row"> 
         <div class="input-field col s12 m4 offset-m4">
-          <input type="number" class="validate" min="0" ng-model="paymentAmount">
-          <label>Loan Payment Amount:</label>
+          <input type="number" class="validate" min="0" ng-model="payment">
+          <label>Minimum payment: ({{minMonthly}})</label>
         </div>
-        <div class="input-field col s12 m4 offset-m4">
-          <input type="password" class="validate" pattern="[0-9]{4}" ng-model="pin">
-          <label data-error="pin must be 4 digits">4 Digit Dwolla Pin</label>
-        </div>
-        <button type="submit" ng-show="false">Submit</button>
       </div>
     </form>
 

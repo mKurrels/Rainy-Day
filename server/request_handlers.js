@@ -115,20 +115,21 @@ exports.deposit = function (req, res) {
       console.log('z tokenz', token, 'pin', pin);
       Dwolla.setToken(token);
       Dwolla.sandbox = true;
-      Dwolla.send(pin, 'michaelKurrels@gmail.com', amount, {destinationType: 'Email', notes: 'Thanks for the coffee!'}, function(err, data) {
+      Dwolla.send(pin, 'michaelKurrels@gmail.com', amount, {destinationType: 'Email', notes: 'family fund deposit!'}, function(err, data) {
         if (err) { 
           console.log('send error===============', err); 
           throw new Error('dwolla send didnt work!'); 
+        } else {
+          console.log('success data', data);
+          console.log('1 got here');
+          group_id = user.get('group_id');
+          changeGroupBalance(group_id, amount, amount);
+          return addTransaction(user_id, amount, "DEPOSIT");
         }
-        console.log('success data', data);
-        console.log('1 got here');
-        group_id = user.get('group_id');
-        changeGroupBalance(group_id, amount, amount);
-        return addTransaction(user_id, amount, "DEPOSIT");
       });
     })
     .then(function (transaction) {
-      console.log('3 got here');
+      console.log('3 got here', transactions);
       res.json({error: false, data: {transaction: transaction}});
     })
     .catch(function (err){
@@ -158,10 +159,12 @@ var getGroupBalancesByUserID = function (user_id) {
 };
 
 exports.withdraw = function (req, res) {
-  var user_id = req.body.user_id;
+  console.log('in withdraw');
+  var user_id = req.user;
   var amount = req.body.amount;
-  var userBalance;
+  var pin = req.body.pin;
   var group_id;
+  var token;
   new User({id: user_id}).fetch()
     .then(function (user) {
       console.log('1');
@@ -170,10 +173,18 @@ exports.withdraw = function (req, res) {
       return getGroupBalancesByUserID(user_id);
     })
     .then(function (balances) {
-      console.log('3');
+      console.log('3', 'userBalance', userBalance, 'amount', amount, 'balances.available_balance', balances.available_balance);
 
       if (userBalance > amount && balances.available_balance > amount) {
         console.log('4', 'amount', amount);
+        // Dwolla.setToken(token);
+        // Dwolla.sandbox = true;
+        // Dwolla.request(pin, 'michaelKurrels@gmail.com', amount, {destinationType: 'Email', notes: 'family fund withdraw'}, function(err, data) {
+        //   if (err) { 
+        //     console.log('withdraw error===============', err); 
+        //     throw new Error('dwolla withdraw didnt work!'); 
+        //   }
+        // });
         changeGroupBalance(group_id, amount*-1, amount*-1);
         changeUserBalance(user_id, amount*-1);
         return addTransaction(user_id, amount*-1, "WITHDRAW");
@@ -206,8 +217,8 @@ var addLoan = function (user_id, principle, duration) {
 
 
 exports.newLoan = function (req, res) {
-
-  var user_id = req.body.user_id;
+  var user_id = req.user;
+  var pin = req.body.pin;
   var principle = req.body.principle;
   var duration = req.body.duration;
 

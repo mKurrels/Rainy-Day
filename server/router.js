@@ -3,8 +3,6 @@ var router = express.Router();
 var reqHandlers = require('./request_handlers');
 var authHandler = require('./authHandler');
 var sendUserInfo = require('./utils').sendUserInfo;
-// var sendUserInfoRefresh = require('./utils').sendUserInfoRefresh;
-
 var passport = require('passport');
 
 
@@ -36,32 +34,14 @@ router.route('/loans')
 
 router.get('/oauth_return', authHandler.getTokenFromCode);
 
-// router.get('/auth/dwolla',
-//   passport.authenticate('dwolla', { scope: 'AccountInfoFull' }),
-
-//   //what's this part for:?
-//   function(req, res){
-//     // The request will be redirected to Dwolla for authentication, so this
-//     // function will not be called.
-//   }
-// );
-
-//not sure if this will work:
-// router.get('/logout', function(req, res){
-//   req.logout();
-//   res.redirect('/');
-// });
-
 router.post('/deposit', ensureAuthenticated, reqHandlers.deposit);
-router.post('/withdraw', reqHandlers.withdraw);
+router.post('/withdraw', ensureAuthenticated, reqHandlers.withdraw);
 router.post('/payment', reqHandlers.newPayment);
 
 router.route('/transactions')
-  // .post(reqHandlers.postTransaction)
   .get(reqHandlers.getAllTransactions);
 
 
-// var redirect_uri = "https://localhost:8443/#/payment";
 router.get('/auth',
   passport.authenticate('dwolla', { scope: 'AccountInfoFull' }),
   function (req, res){

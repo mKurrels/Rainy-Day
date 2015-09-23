@@ -58,17 +58,20 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
   };
 
 
-  $scope.makeWithdraw = function (amount) {
-    if (canWithdraw >= amount) {
-      changeBalance.withdraw(amount, function (err) {
-        $scope.isLoading = true;
+  $scope.makeWithdraw = function (amount, pin) {
+    console.log('amount', amount);
+    $scope.isLoading = true;
+    if ($scope.canWithdraw >= amount) {
+      changeBalance.withdraw(amount, pin, function (err) {
         if(err) {
           displayError(err);
         } else {
-          $scope.isDone = true;
           $scope.yourBalance -= amount;
           $scope.groupAvailable -=amount;
-          $scope.isLoading = false;
+          $scope.groupTotal -=amount;
+          reset();
+          $scope.successMessage = "your withdraw has been processed!";
+          $scope.isDone = true;
         }
       }); 
     } else {
@@ -76,23 +79,24 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
     }
   };
 
-  $scope.getLoan = function (amount, duration) {
+  $scope.getLoan = function (amount, duration, pin) {
+    $scope.isLoading = true;
     if (amount <= $scope.groupTotal) {
-      loan.requestLoan (amount, duration, function (err) {
+      loan.requestLoan (amount, duration, pin, function (err) {
         $scope.isLoading = true;
         if(err) {
           displayError(err);
         } else {
-          $scope.isDone = true;
           $scope.yourBalance -= amount;
           $scope.groupAvailable -=amount;
-          $scope.isLoading = false;
+          reset();
+          $scope.successMessage = "your loan has been processed!";
+          $scope.isDone = true;
         }
       });
       
     }
     console.log(amount, duration);
-    $scope.isLoading = true;
   };
 
   var displayError = function (message) {
@@ -116,6 +120,8 @@ payment.controller('paymentController', function ($cookies, $location, $scope, c
   function reset() {
     $scope.isLoading = false;
     $scope.deposit = false;
+    $scope.withdraw = false;
+    $scope.loan = false;
     console.log('reset called');
     updateLocalStorage();
   }

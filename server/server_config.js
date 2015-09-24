@@ -11,6 +11,7 @@ var authRouter = require('./routes/authRouter');
 
 var DWOLLA_KEY = process.env.KEY || require('../api').key;
 var DWOLLA_SECRET = process.env.SECRET || require('../api').secret;
+var callbackURL = process.env.CALLBACK_URL || 'https://localhost:8443/auth/dwolla/callback';
 
 
 passport.serializeUser(function(user_id, done) {
@@ -25,7 +26,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new DwollaStrategy({
     clientID: DWOLLA_KEY,
     clientSecret: DWOLLA_SECRET,
-    callbackURL: "/auth/dwolla/callback",
+    callbackURL: callbackURL,
     sandbox: true
   },
   function(accessToken, refreshToken, profile, done) {

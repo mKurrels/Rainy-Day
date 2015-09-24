@@ -15,10 +15,12 @@ var callbackURL = process.env.CALLBACK_URL || 'https://localhost:8443/auth/dwoll
 
 
 passport.serializeUser(function(user_id, done) {
+  console.log('serializeUser', user_id);
   done(null, user_id);
 });
 
 passport.deserializeUser(function(obj, done) {
+  console.log('deserializeUser', obsj);
   done(null, obj);
 });
 

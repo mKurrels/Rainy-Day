@@ -1,6 +1,6 @@
 var express = require('express');
 var passport = require('passport');
-var DwollaStrategy = require('../vendor/passport-dwolla').Strategy;
+var DwollaStrategy = require('../vendor/passport-dwolla/lib/index').Strategy;
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var morgan = require('morgan');

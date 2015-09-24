@@ -1,6 +1,7 @@
 var express = require('express');
 var passport = require('passport');
 var DwollaStrategy = require('../vendor/passport-dwolla/lib/index').Strategy;
+console.log('DwollaStrategy', DwollaStrategy);
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var morgan = require('morgan');
@@ -35,7 +36,7 @@ passport.use(new DwollaStrategy({
     new User({id: profile._json.Response.Id})
       .fetch({withRelated: ['group', 'loan', 'transactions']})
       .then(function(user) {
-        console.log('1 *********** user', user, 'accessToken', accessToken, 'refreshToken', refreshToken, 'profile', profile)
+        console.log('1 *********** user', user, 'accessToken', accessToken, 'refreshToken', refreshToken, 'profile', profile);
         if (!user) {
           //just giving a group_id of 1 for now, while I figure out how to do groups
           return new User()

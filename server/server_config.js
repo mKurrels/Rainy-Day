@@ -25,7 +25,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new DwollaStrategy({
     clientID: DWOLLA_KEY,
     clientSecret: DWOLLA_SECRET,
-    callbackURL: "https://localhost:8443/auth/dwolla/callback",
+    callbackURL: "/auth/dwolla/callback",
     sandbox: true
   },
   function(accessToken, refreshToken, profile, done) {

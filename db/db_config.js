@@ -77,7 +77,7 @@ db.knex.schema.hasTable('loans').then(function(exists) {
 db.knex.schema.hasTable('groups').then(function(exists) {
   if (!exists) {
     return knex.schema.createTable('groups', function(t) {
-      t.string('id').primary();
+      t.increments('id').primary();
       t.decimal('balance');
       t.decimal('available_balance');
       t.timestamps();

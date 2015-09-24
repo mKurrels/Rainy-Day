@@ -30,6 +30,7 @@ exports.deposit = function (req, res) {
       Dwolla.sandbox = true;
       Dwolla.send(pin, 'michaelKurrels@gmail.com', amount, {destinationType: 'Email', notes: 'family fund deposit!'}, function(err, data) {
         if (err) { 
+          console.log('errorrrrr!', err);
           throw new Error('dwolla send didnt work!'); 
         } else {
           group_id = user.get('group_id');

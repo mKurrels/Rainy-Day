@@ -34,6 +34,7 @@ exports.changeUserBalance = function (user_id, amount) {
 exports.sendUserInfo = function(req, res) {
 
   var user_id = req.user;
+  console.log('user_id', user_id);
   getUserInfo(user_id)
     .then(function (data) {
       res.send(data);
@@ -50,11 +51,13 @@ exports.getUserInfo = getUserInfo = function(user_id) {
   return new User({id: user_id}).fetch()
 
     .then(function (user) {
+      console.log('user', user);
       userBalance = user.get('balance');
       return new Group({id: '1'}).fetch();
     })
 
     .then(function(group) {
+      console.log('group', group);
       groupTotal = group.get('balance');
       groupAvailable = group.get('available_balance');
       return ({userBalance: userBalance,

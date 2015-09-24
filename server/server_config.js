@@ -43,6 +43,7 @@ passport.use(new DwollaStrategy({
         }
       })
       .then(function (user) {
+        console.log('user', user);
         return done(null, profile._json.Response.Id);
       })
       .catch(function (err){

@@ -21,7 +21,7 @@ passport.serializeUser(function(user_id, done) {
 });
 
 passport.deserializeUser(function(obj, done) {
-  console.log('deserializeUser', obsj);
+  console.log('deserializeUser', obj);
   done(null, obj);
 });
 

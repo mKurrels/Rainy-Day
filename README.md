@@ -1,26 +1,13 @@
 # Rainy Day
 
-> Micro Loans for Families
+A group savings and lending platform for families. Members can pool their money, and when one of them gets in trouble, the family can give that member a loan from the shared fund
 
   - __Product Owner__: Michael Kurrels
-
-## Table of Contents
-
-1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
-1. [Contributing](#contributing)
-
-## Usage
-
-> Some usage instructions
 
 ## Requirements
 
 - Node
 - npm
-
-## Development
 
 ### Installing Dependencies
 
@@ -31,7 +18,3 @@ npm install
 bower install
 ```
 
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.

@@ -6,6 +6,10 @@ var util = require('util')
   , InternalOAuthError = require('passport-oauth2').InternalOAuthError;
 
 
+// Dwolla allows for sandbox
+var isSandbox = false;
+
+
 /**
  * `Strategy` constructor.
  *
@@ -21,6 +25,7 @@ var util = require('util')
  *   - `clientID`      your Dwolla application's client id
  *   - `clientSecret`  your Dwolla application's client secret
  *   - `callbackURL`   URL to which Dwolla will redirect the user after granting authorization
+ *   - `sandBox`       set to 'TRUE' if you are using the dwolla sandbox endpoint
  *
  * Examples:
  *
@@ -43,12 +48,14 @@ var util = require('util')
 function Strategy(options, verify) {
   options = options || {};
   if (options.sandbox) {
-    console.log('sandbox!*********');
-    options.authorizationURL = options.authorizationURL || 'https://uat.dwolla.com/oauth/v2/authenticate';
-    options.tokenURL = options.tokenURL || 'https://uat.dwolla.com/oauth/v2/token';
-  } else {
+    isSandbox = true;
+  }
+  if (!isSandbox) {
     options.authorizationURL = options.authorizationURL || 'https://www.dwolla.com/oauth/v2/authenticate';
     options.tokenURL = options.tokenURL || 'https://www.dwolla.com/oauth/v2/token';
+  } else {
+    options.authorizationURL = options.authorizationURL || 'https://uat.dwolla.com/oauth/v2/authenticate';
+    options.tokenURL = options.tokenURL || 'https://uat.dwolla.com/oauth/v2/token';
   }
   
   OAuth2Strategy.call(this, options, verify);
@@ -78,13 +85,10 @@ util.inherits(Strategy, OAuth2Strategy);
  * @api protected
  */
 Strategy.prototype.userProfile = function(accessToken, done) {
-  this._oauth2.get('https://uat.dwolla.com/oauth/rest/users/', accessToken, function (err, body, res) {
+  var usersEndpoint = isSandbox ? 'https://uat.dwolla.com/oauth/rest/users/' : 'https://www.dwolla.com/oauth/rest/users/';
+  this._oauth2.get(usersEndpoint, accessToken, function (err, body, res) {
     if (err) { return done(new InternalOAuthError('failed to fetch user profile', err)); }
     
-
-    console.log('324234234234234234234234234234', body, 'body.Response', body.Response);
-    
-
     try {
       var json = JSON.parse(body);
       
@@ -100,7 +104,7 @@ Strategy.prototype.userProfile = function(accessToken, done) {
       done(e);
     }
   });
-};
+}
 
 
 /**
